@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>ZedEvents - Settings</title>
-  <meta name="theme-color" content="#C2410C" />
+  <meta name="theme-color" content="#111111" />
   <script src="/js/prefs.js"></script>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" type="image/png" href="/icon-192.png" />
@@ -13,102 +13,107 @@
     :root {
       --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
       --text: #211D1A; --subtext: #5C5955; --black: #111111;
-      --orange: #C2410C; --cream: #FFF3E8; --price-red: #A3131C; --red-btn: #E01B27;
+      --gold: #F5C518; --price-red: #A3131C; --red-btn: #E01B27;
+    }
+    body.dark {
+      --bg: #121212; --card: #252525; --border: #505050;
+      --text: #F5F2ED; --subtext: #C9C0B6; --black: #111111;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg); color: var(--text); padding-bottom: 24px;
+      background: var(--bg); color: var(--text);
+      transition: background 0.2s, color 0.2s;
     }
+
     .topbar {
       position: sticky; top: 0; z-index: 50;
-      background: var(--orange); padding: 16px;
+      background: var(--black); padding: 16px;
       display: flex; align-items: center; gap: 12px;
     }
     .back-button {
-      width: 40px; height: 40px; padding: 0; background: none; border: none;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; padding: 0;
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .back-button svg {
-      width: 22px; height: 22px; stroke: var(--cream); fill: none;
+      width: 22px; height: 22px; stroke: var(--gold); fill: none;
       stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
     }
-    .header-title { color: var(--cream); font-size: 18px; font-weight: 700; }
+    .header-title { color: var(--gold); font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .header-title svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
     .content { padding: 16px; max-width: 560px; margin: 0 auto; }
     .profile {
-      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-      padding: 16px; margin-bottom: 8px;
+      background: var(--card); border: 2px solid var(--text); border-radius: 0;
+      padding: 14px; margin-bottom: 8px;
     }
-    .profile-name { font-size: 17px; font-weight: 700; }
-    .profile-phone { font-size: 13px; color: var(--subtext); margin-top: 4px; }
+    .profile-name { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.01em; }
+    .profile-phone { font-size: 12px; color: var(--subtext); margin-top: 4px; letter-spacing: 0.04em; }
     .section-label {
-      font-size: 11px; font-weight: 700; color: var(--subtext);
-      text-transform: uppercase; margin: 20px 0 8px;
+      font-size: 11px; font-weight: 800; color: var(--text); text-transform: uppercase;
+      letter-spacing: 0.04em; margin: 22px 0 10px; border-bottom: 2px solid var(--text); padding-bottom: 8px;
     }
     .row {
-      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-      padding: 14px; display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 8px; cursor: pointer; width: 100%; text-align: left; color: inherit;
-      font: inherit;
+      background: var(--card); border: 2px solid var(--border); border-radius: 0; padding: 14px;
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; cursor: pointer;
+      width: 100%; text-align: left; color: inherit; font: inherit;
     }
-    .row-title { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-    .row-title svg {
-      width: 18px; height: 18px; flex-shrink: 0; stroke: currentColor; fill: none;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
+    .row-title { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .row-title svg { width: 18px; height: 18px; flex-shrink: 0; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .row-title.danger svg { stroke: var(--price-red); }
     .row-sub { font-size: 11px; color: var(--subtext); margin-top: 2px; }
     .danger { color: var(--price-red); }
     .logout-text { color: var(--red-btn); }
+
     .switch { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute; cursor: pointer; inset: 0; background: var(--border);
-      border-radius: 26px; transition: 0.2s;
+    .slider { position: absolute; cursor: pointer; inset: 0; background: #fff; border-radius: 0; border: 2px solid var(--black); transition: 0.2s; }
+    .slider::before { content: ""; position: absolute; height: 16px; width: 16px; left: 3px; bottom: 3px; background: var(--black); border-radius: 0; transition: 0.2s; }
+    input:checked + .slider { background: var(--black); border-color: var(--black); }
+    input:checked + .slider::before { transform: translateX(18px); background: #fff; }
+
+    .lang-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .lang-chip {
+      flex: 1; background: var(--card); border: 2px solid var(--text); border-radius: 0;
+      padding: 12px 8px; font-size: 11px; font-weight: 800; cursor: pointer; text-align: center;
+      color: var(--text); text-transform: uppercase; letter-spacing: 0.02em;
     }
-    .slider::before {
-      content: ""; position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px;
-      background: #fff; border-radius: 50%; transition: 0.2s;
-    }
-    input:checked + .slider { background: var(--orange); }
-    input:checked + .slider::before { transform: translateX(18px); }
-    .chip {
-      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
-      padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text);
-    }
-    .chip.on { background: var(--orange); border-color: var(--orange); color: #fff; }
-    .version-text { text-align: center; color: var(--subtext); font-size: 11px; margin-top: 24px; }
+    .lang-chip.active { background: var(--black); border-color: var(--black); color: var(--gold); }
+
+    .version-text { text-align: center; color: var(--subtext); font-size: 11px; margin-top: 24px; text-transform: uppercase; letter-spacing: 0.04em; }
+
     .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200;
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200;
       align-items: flex-end; justify-content: center;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
     .modal-overlay.open { display: flex; }
     .modal-box {
       background: var(--bg); width: 100%; max-width: 480px;
-      border-radius: 20px 20px 0 0;
+      border-radius: 0; border-top: 3px solid var(--black);
       padding: 20px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+      max-height: min(88vh, calc(100dvh - 16px));
+      overflow-y: auto;
     }
-    .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
-    .modal-warning { font-size: 12px; color: var(--subtext); margin-bottom: 10px; line-height: 1.4; }
-    .modal-input {
-      width: 100%; background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px; margin-bottom: 14px; font-size: 14px;
-      text-transform: uppercase;
-    }
+    .modal-title { font-size: 16px; font-weight: 800; color: var(--price-red); margin-bottom: 10px; text-transform: uppercase; letter-spacing: -0.01em; }
+    .modal-warning { font-size: 12px; color: var(--subtext); margin-bottom: 10px; }
+    .modal-input { width: 100%; background: var(--card); border: 2px solid var(--text); border-radius: 0; padding: 12px; margin-bottom: 14px; font-size: 14px; text-transform: uppercase; }
     .modal-actions { display: flex; gap: 10px; }
-    .modal-cancel-btn, .modal-ok-btn {
-      flex: 1; border-radius: 12px; padding: 13px; font-weight: 700; cursor: pointer; border: none;
-    }
-    .modal-cancel-btn { background: var(--card); border: 1px solid var(--border); color: var(--subtext); }
-    .modal-ok-btn { background: var(--price-red); color: #fff; }
-    .modal-ok-btn.orange { background: var(--orange); }
+    .modal-cancel-btn { flex: 1; background: var(--card); border: 2px solid var(--text); border-radius: 0; padding: 13px; text-align: center; color: var(--text); font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; font-size: 12px; }
+    .modal-ok-btn { flex: 1; background: var(--price-red); border: none; border-radius: 0; padding: 13px; text-align: center; color: #fff; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em; font-size: 12px; }
+    .modal-ok-btn.logout { background: var(--red-btn); }
   </style>
 </head>
-<body>
+<body data-bar="black">
   <div class="topbar">
     <button class="back-button" type="button" onclick="history.back()" aria-label="Go back">
       <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <div class="header-title" data-i18n="settings">Settings</div>
+    <div class="header-title">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span data-i18n="settings">Settings</span>
+    </div>
   </div>
 
   <div class="content">
@@ -117,14 +122,23 @@
       <div class="profile-phone" id="phone"></div>
     </div>
 
-    <div class="section-label" data-i18n="language">Language</div>
-    <div class="row" style="cursor:default;flex-wrap:wrap;gap:8px;">
-      <button class="chip" type="button" id="langEn">English</button>
-      <button class="chip" type="button" id="langBem">Bemba</button>
-      <button class="chip" type="button" id="langNy">Nyanja</button>
+    <div class="section-label" data-i18n="section_language">Language</div>
+    <div class="lang-row" id="langRow">
+      <button type="button" class="lang-chip" data-lang="en" data-i18n="lang_en">English</button>
+      <button type="button" class="lang-chip" data-lang="bem" data-i18n="lang_bem">IciBemba</button>
+      <button type="button" class="lang-chip" data-lang="ny" data-i18n="lang_ny">Chinyanja</button>
     </div>
 
-    <div class="section-label" data-i18n="appearance">Appearance</div>
+    <div class="section-label" data-i18n="section_appearance">Appearance</div>
+    <button class="row" type="button" id="shareRow">
+      <div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          <span data-i18n="share_app">Share ZedEvents</span>
+        </div>
+        <div class="row-sub" data-i18n="share_app_sub">Share the app link with friends</div>
+      </div>
+    </button>
     <div class="row" style="cursor:default;">
       <div style="flex:1;margin-right:10px;">
         <div class="row-title" data-i18n="dark_mode">Dark mode</div>
@@ -146,7 +160,18 @@
       </label>
     </div>
 
-    <div class="section-label" data-i18n="quick_links">Quick links</div>
+    <div class="section-label" data-i18n="section_board">Wanted Board</div>
+    <button class="row" type="button" onclick="location.href='/wanted.html'">
+      <div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span data-i18n="wanted_board">Wanted Board</span>
+        </div>
+        <div class="row-sub" data-i18n="wanted_board_sub">Ask for a DJ, catering, tents, and more</div>
+      </div>
+    </button>
+
+    <div class="section-label" data-i18n="section_shop">Shop</div>
     <button class="row" type="button" onclick="location.href='/my-shop.html'">
       <div>
         <div class="row-title">
@@ -156,6 +181,26 @@
         <div class="row-sub">Manage your services</div>
       </div>
     </button>
+    <button class="row" type="button" onclick="location.href='/register-shop.html'">
+      <div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          <span data-i18n="register_shop">Register / update shop</span>
+        </div>
+        <div class="row-sub">Become a vendor or update shop details</div>
+      </div>
+    </button>
+    <button class="row" type="button" id="adminRow" style="display:none;" onclick="location.href='/admin.html'">
+      <div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Admin
+        </div>
+        <div class="row-sub">Approve or reject pending services</div>
+      </div>
+    </button>
+
+    <div class="section-label" data-i18n="section_activity">Activity</div>
     <button class="row" type="button" onclick="location.href='/chats.html'">
       <div>
         <div class="row-title">
@@ -175,64 +220,33 @@
     </button>
     <button class="row" type="button" onclick="location.href='/following.html'">
       <div>
-        <div class="row-title" data-i18n="following_shops">Following</div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          <span data-i18n="following_shops">Following</span>
+        </div>
         <div class="row-sub" data-i18n="following_sub">Shops you follow</div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/saved-searches.html'">
       <div>
-        <div class="row-title" data-i18n="saved_searches">Saved searches</div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span data-i18n="saved_searches">Saved searches</span>
+        </div>
         <div class="row-sub" data-i18n="saved_searches_sub">Get a ping when something matches</div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/referrals.html'">
       <div>
-        <div class="row-title" data-i18n="referrals">Referrals</div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+          <span data-i18n="referrals">Referrals</span>
+        </div>
         <div class="row-sub" data-i18n="referrals_sub">Your invite code and boost credits</div>
       </div>
     </button>
-    <button class="row" type="button" onclick="location.href='/report-user.html'">
-      <div>
-        <div class="row-title" data-i18n="report_user">Report a user</div>
-        <div class="row-sub" data-i18n="report_user_sub">Scam, abuse, or spam</div>
-      </div>
-    </button>
-    <button class="row" type="button" id="supportRow">
-      <div>
-        <div class="row-title" data-i18n="contact_support">Contact support</div>
-        <div class="row-sub" data-i18n="contact_support_sub">Chat with ZedEvents</div>
-      </div>
-    </button>
-    <button class="row" type="button" onclick="location.href='/privacy-policy.html'">
-      <div>
-        <div class="row-title" data-i18n="privacy">Privacy policy</div>
-      </div>
-    </button>
-    <button class="row" type="button" onclick="location.href='/terms.html'">
-      <div>
-        <div class="row-title" data-i18n="terms">Terms of use</div>
-      </div>
-    </button>
-    <button class="row" type="button" onclick="location.href='/register-shop.html'">
-      <div>
-        <div class="row-title">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-          Register / update shop
-        </div>
-        <div class="row-sub">Become a vendor or update shop details</div>
-      </div>
-    </button>
-    <button class="row" type="button" id="adminRow" style="display:none;" onclick="location.href='/admin.html'">
-      <div>
-        <div class="row-title">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Admin
-        </div>
-        <div class="row-sub">Approve or reject pending services</div>
-      </div>
-    </button>
 
-    <div class="section-label" data-i18n="notifications">Notifications</div>
+    <div class="section-label" data-i18n="section_notifications">Notifications</div>
     <button class="row" type="button" id="pushTestRow">
       <div>
         <div class="row-title" data-i18n="push_test">Send a test notification</div>
@@ -250,7 +264,16 @@
       </label>
     </div>
 
-    <div class="section-label" data-i18n="share_section">Share</div>
+    <div class="section-label" data-i18n="section_support">Support</div>
+    <button class="row" type="button" id="supportRow">
+      <div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+          <span data-i18n="contact_support">Contact support</span>
+        </div>
+        <div class="row-sub" data-i18n="contact_support_sub">Chat with ZedEvents</div>
+      </div>
+    </button>
     <button class="row" type="button" id="settingsInstallRow">
       <div>
         <div class="row-title">
@@ -260,17 +283,29 @@
         <div class="row-sub" data-i18n="download_app_sub">Install ZedEvents on your home screen</div>
       </div>
     </button>
-    <button class="row" type="button" id="shareRow">
+
+    <div class="section-label" data-i18n="section_legal">Legal</div>
+    <button class="row" type="button" onclick="location.href='/report-user.html'">
       <div>
         <div class="row-title">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-          <span data-i18n="share_app">Share ZedEvents</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+          <span data-i18n="report_user">Report a user</span>
         </div>
-        <div class="row-sub" data-i18n="share_app_sub">Share the app link with friends</div>
+        <div class="row-sub" data-i18n="report_user_sub">Scam, abuse, or spam</div>
+      </div>
+    </button>
+    <button class="row" type="button" onclick="location.href='/privacy-policy.html'">
+      <div>
+        <div class="row-title" data-i18n="privacy">Privacy policy</div>
+      </div>
+    </button>
+    <button class="row" type="button" onclick="location.href='/terms.html'">
+      <div>
+        <div class="row-title" data-i18n="terms">Terms of use</div>
       </div>
     </button>
 
-    <div class="section-label" data-i18n="account">Account</div>
+    <div class="section-label" data-i18n="section_account">Account</div>
     <button class="row" type="button" id="deleteRow">
       <div class="row-title danger">
         <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
@@ -286,22 +321,22 @@
 
   <div class="modal-overlay" id="logoutModal">
     <div class="modal-box">
-      <div class="modal-title" style="color:var(--red-btn);">Log out?</div>
+      <div class="modal-title" style="color:var(--red-btn);" data-i18n="logout_confirm">Log out?</div>
       <div class="modal-warning">You can log back in anytime with your phone number.</div>
       <div class="modal-actions">
-        <button class="modal-cancel-btn" type="button" data-close="logoutModal">Cancel</button>
-        <button class="modal-ok-btn orange" type="button" id="logoutConfirm">Log out</button>
+        <button class="modal-cancel-btn" type="button" data-close="logoutModal" data-i18n="cancel">Cancel</button>
+        <button class="modal-ok-btn logout" type="button" id="logoutConfirm" data-i18n="logout">Log out</button>
       </div>
     </div>
   </div>
 
   <div class="modal-overlay" id="deleteModal">
     <div class="modal-box">
-      <div class="modal-title" style="color:var(--price-red);">Delete your account?</div>
+      <div class="modal-title">Delete your account?</div>
       <div class="modal-warning">This permanently removes your account and hides your services. Type DELETE to confirm.</div>
       <input class="modal-input" id="deleteInput" placeholder="Type DELETE" autocomplete="off" />
       <div class="modal-actions">
-        <button class="modal-cancel-btn" type="button" data-close="deleteModal">Cancel</button>
+        <button class="modal-cancel-btn" type="button" data-close="deleteModal" data-i18n="cancel">Cancel</button>
         <button class="modal-ok-btn" type="button" id="deleteConfirm">Delete</button>
       </div>
     </div>
@@ -352,7 +387,7 @@
       };
       document.getElementById("deleteConfirm").onclick = async () => {
         if (document.getElementById("deleteInput").value.trim().toUpperCase() !== "DELETE") {
-          ZEUI.error('Type DELETE to confirm.');
+          ZEUI.error("Type DELETE to confirm.");
           return;
         }
         try {
@@ -366,13 +401,16 @@
 
       function paintLang() {
         const lang = typeof getLang === "function" ? getLang() : "en";
-        document.getElementById("langEn").classList.toggle("on", lang === "en");
-        document.getElementById("langBem").classList.toggle("on", lang === "bem");
-        document.getElementById("langNy").classList.toggle("on", lang === "ny");
+        document.querySelectorAll("#langRow [data-lang]").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.lang === lang);
+        });
       }
-      document.getElementById("langEn").onclick = () => { setLangAndApply("en"); paintLang(); };
-      document.getElementById("langBem").onclick = () => { setLangAndApply("bem"); paintLang(); };
-      document.getElementById("langNy").onclick = () => { setLangAndApply("ny"); paintLang(); };
+      document.getElementById("langRow").addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-lang]");
+        if (!btn) return;
+        setLangAndApply(btn.dataset.lang);
+        paintLang();
+      });
       paintLang();
 
       const darkToggle = document.getElementById("darkToggle");
@@ -424,7 +462,7 @@
             await navigator.share(data);
           } else if (navigator.clipboard) {
             await navigator.clipboard.writeText(url);
-            ZEUI.toast("Link copied.", "success");
+            ZEUI.toast(typeof t === "function" ? t("copied") : "Link copied.", "success");
           } else {
             ZEUI.toast(url, "info");
           }

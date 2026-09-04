@@ -40,7 +40,11 @@
     if (document.body) document.body.classList.toggle("dark", dark);
     if (document.body) document.body.classList.toggle("low-data", isLowData());
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", dark ? "#1A1614" : "#C2410C");
+    if (meta) {
+      const bar = document.body && document.body.getAttribute("data-bar");
+      if (bar === "black") meta.setAttribute("content", "#111111");
+      else meta.setAttribute("content", dark ? "#1A1614" : "#C2410C");
+    }
   }
 
   function setDark(enabled) {

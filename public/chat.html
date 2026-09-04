@@ -121,12 +121,20 @@
       /* redirected */
     } else {
       const user = ZEAuth.getUser();
-      const otherId = new URLSearchParams(location.search).get("userId");
-      const isSupport = new URLSearchParams(location.search).get("support") === "1";
+      const params = new URLSearchParams(location.search);
+      const otherId = params.get("userId");
+      const isSupport = params.get("support") === "1";
+      const wantedTitle = params.get("wantedTitle");
+      const wantedBudget = params.get("wantedBudget");
       const messagesEl = document.getElementById("messages");
       const status = document.getElementById("status");
       const textInput = document.getElementById("text");
       let sending = false;
+
+      if (wantedTitle && textInput && !textInput.value) {
+        const budgetBit = wantedBudget ? ` (budget K${wantedBudget})` : "";
+        textInput.value = `I have this: ${wantedTitle}${budgetBit}`;
+      }
 
       if (!otherId) {
         status.textContent = "Missing chat user.";

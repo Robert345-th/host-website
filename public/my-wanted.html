@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ZedEvents - My Wanted Posts</title>
+<meta name="theme-color" content="#111111" />
+<script src="/js/prefs.js"></script>
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" type="image/png" href="/icon-192.png" />
+<link rel="apple-touch-icon" href="/icon-192.png" />
+<style>
+  :root {
+    --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
+    --text: #211D1A; --subtext: #5C5955; --black: #111111;
+    --gold: #F5C518; --price-red: #A3131C; --red-btn: #E01B27; --approved-bg: #2F4F3E;
+  }
+  body.dark {
+    --bg: #121212; --card: #1E1E1E; --border: #333333;
+    --text: #F0EDE8; --subtext: #A8A29B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; background: var(--bg); color: var(--text); }
+
+  .topbar { background: var(--black); padding: 16px; display: flex; align-items: center; gap: 12px; }
+  .back-button { width: 40px; height: 40px; padding: 0; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .back-button svg { width: 22px; height: 22px; stroke: var(--gold); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .header-title { color: var(--gold); font-size: 18px; font-weight: 700; flex: 1; }
+
+  .center-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 24px; text-align: center; }
+  .empty-text { color: var(--subtext); margin-bottom: 16px; }
+  .empty-btn { background: var(--black); color: var(--gold); border: none; padding: 12px 20px; border-radius: 0; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+  .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--price-red); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .list { padding: 16px 16px calc(160px + env(safe-area-inset-bottom, 0px)); max-width: 560px; margin: 0 auto; }
+  .card {
+    background: var(--card); border: 1.5px solid var(--text); border-radius: 0;
+    padding: 16px; margin-bottom: 16px;
+  }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .card-title { font-size: 16px; font-weight: 800; flex: 1; }
+  .card-budget { font-size: 16px; font-weight: 800; color: var(--price-red); }
+  .card-desc { font-size: 13px; color: var(--subtext); margin-top: 8px; line-height: 1.45; }
+  .card-meta-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+  .badge { background: var(--black); color: var(--gold); padding: 3px 8px; border-radius: 0; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+  .badge.closed { background: var(--subtext); color: #fff; }
+  .card-meta { font-size: 12px; color: var(--subtext); }
+  .card-photo {
+    width: calc(100% + 32px); height: 160px; object-fit: cover; display: block;
+    margin: -16px -16px 12px; border-bottom: 1.5px solid var(--text);
+  }
+  .btn-row { display: flex; gap: 10px; margin-top: 14px; }
+  .action-btn { flex: 1; border-radius: 0; padding: 11px; font-weight: 800; font-size: 13px; cursor: pointer; text-transform: uppercase; }
+  .close-btn { background: var(--approved-bg); color: #fff; border: none; }
+  .delete-btn { background: var(--card); border: 2px solid var(--text); color: var(--price-red); }
+  .action-btn:disabled { opacity: 0.7; }
+
+  .fab {
+    position: fixed;
+    left: 20px; right: 20px; max-width: 520px; margin: 0 auto;
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    z-index: 55;
+    background: var(--black); border: none; border-radius: 0; padding: 16px; text-align: center;
+    color: var(--gold); font-weight: 800; font-size: 13px; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+</style>
+</head>
+<body data-nav-active="wanted" data-bar="black">
+
+<div class="topbar">
+  <button class="back-button" onclick="history.back()" aria-label="Go back"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button>
+  <div class="header-title" data-i18n="my_wanted_title">My Wanted Posts</div>
+</div>
+
+<div id="content"><div class="center-box"><div class="spinner"></div></div></div>
+
+<button type="button" class="fab" id="postWantedBtn" data-i18n="post_wanted">+ Post What You Want</button>
+
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/ui.js"></script>
+<script src="/js/lang.js"></script>
+<script src="/js/bottom-nav.js"></script>
+<script>
+  const content = document.getElementById("content");
+
+  function escapeHtml(str) {
+    return String(str == null ? "" : str)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function formatBudget(budget) {
+    if (budget == null || budget === "") return "";
+    const n = Number(budget);
+    if (Number.isNaN(n)) return "K" + escapeHtml(budget);
+    return "K" + n.toLocaleString();
+  }
+
+  if (!ZEAuth.requireLogin("/my-wanted.html")) {
+    /* redirected */
+  } else {
+    document.getElementById("postWantedBtn").addEventListener("click", () => {
+      location.href = "/post-wanted.html";
+    });
+    loadPosts();
+  }
+
+  async function loadPosts() {
+    try {
+      const posts = await ZE.api("/wanted/mine");
+      if (!posts.length) {
+        content.innerHTML = `
+          <div class="center-box">
+            <div class="empty-text">${t("wanted_empty")}</div>
+            <button type="button" class="empty-btn" onclick="location.href='/post-wanted.html'">${t("post_wanted")}</button>
+          </div>`;
+        return;
+      }
+      content.innerHTML = `<div class="list">${posts.map(renderCard).join("")}</div>`;
+      posts.forEach((post) => {
+        document.getElementById(`close-${post.id}`)?.addEventListener("click", () => closePost(post.id));
+        document.getElementById(`delete-${post.id}`)?.addEventListener("click", () => deletePost(post.id));
+      });
+    } catch (e) {
+      content.innerHTML = `<div class="center-box"><div class="empty-text">${t("wanted_load_fail")}</div></div>`;
+    }
+  }
+
+  function renderCard(post) {
+    const isOpen = post.status === "open";
+    const date = post.date_posted
+      ? new Date(post.date_posted).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
+      : "";
+    const photos = Array.isArray(post.photos) ? post.photos.filter(Boolean) : [];
+    const rawHero = photos[0] || "";
+    const hero = rawHero && window.ZEPrefs ? ZEPrefs.optimizeImageUrl(rawHero, "card") : rawHero;
+    const budget = formatBudget(post.budget);
+    return `
+      <div class="card">
+        ${hero ? `<img class="card-photo" src="${escapeHtml(hero)}" alt="">` : ""}
+        <div class="card-header">
+          <div class="card-title">${escapeHtml(post.title)}</div>
+          ${budget ? `<div class="card-budget">${budget}</div>` : ""}
+        </div>
+        ${post.description ? `<div class="card-desc">${escapeHtml(post.description)}</div>` : ""}
+        <div class="card-meta-row">
+          ${post.category ? `<div class="badge">${escapeHtml(post.category)}</div>` : ""}
+          <div class="badge ${isOpen ? "" : "closed"}">${isOpen ? t("wanted_status_open") : t("wanted_status_closed")}</div>
+          ${post.location_label ? `<div class="card-meta">${escapeHtml(post.location_label)}</div>` : ""}
+          ${date ? `<div class="card-meta">${escapeHtml(date)}</div>` : ""}
+        </div>
+        <div class="btn-row">
+          ${isOpen ? `<button type="button" class="action-btn close-btn" id="close-${post.id}">${t("mark_found")}</button>` : ""}
+          <button type="button" class="action-btn delete-btn" id="delete-${post.id}">${t("wanted_delete")}</button>
+        </div>
+      </div>`;
+  }
+
+  async function closePost(id) {
+    const ok = await ZEUI.confirm({
+      title: t("mark_found"),
+      message: t("wanted_close_confirm"),
+      okText: t("mark_found"),
+    });
+    if (!ok) return;
+    const btn = document.getElementById(`close-${id}`);
+    if (btn) { btn.disabled = true; btn.textContent = t("wanted_updating"); }
+    try {
+      await ZE.api(`/wanted/${id}/close`, { method: "PUT" });
+      loadPosts();
+    } catch {
+      ZEUI.error(t("wanted_update_fail"));
+      if (btn) { btn.disabled = false; btn.textContent = t("mark_found"); }
+    }
+  }
+
+  async function deletePost(id) {
+    const ok = await ZEUI.confirm({
+      title: t("wanted_delete"),
+      message: t("wanted_delete_confirm"),
+      okText: t("wanted_delete"),
+      danger: true,
+    });
+    if (!ok) return;
+    try {
+      await ZE.api(`/wanted/${id}`, { method: "DELETE" });
+      loadPosts();
+    } catch {
+      ZEUI.error(t("wanted_update_fail"));
+    }
+  }
+</script>
+</body>
+</html>
