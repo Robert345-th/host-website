@@ -163,7 +163,7 @@
   <script>
     const app = document.getElementById("app");
     let tab = "services";
-    let services = [], shopApps = [], users = [], reports = [], userReports = [];
+    let services = [], shopApps = [], users = [], reports = [], userReports = [], boosts = [];
     let userSearchText = "";
     let viewShopTargetId = null;
     let rejectTargetId = null;
@@ -230,18 +230,20 @@
     }
 
     async function loadAll() {
-      const [svc, shops, usrs, reps, uReps] = await Promise.all([
+      const [svc, shops, usrs, reps, uReps, bst] = await Promise.all([
         ZE.api("/admin/services/pending").catch(() => []),
         ZE.api("/admin/vendor-applications/pending").catch(() => []),
         ZE.api("/admin/users").catch(() => []),
         ZE.api("/admin/reports/pending").catch(() => []),
         ZE.api("/user-reports/pending").catch(() => []),
+        ZE.api("/boost/pending").catch(() => []),
       ]);
       services = svc;
       shopApps = shops;
       users = usrs;
       reports = reps;
       userReports = uReps;
+      boosts = bst;
       render();
     }
 
@@ -252,6 +254,7 @@
         { key: "users", label: `Users (${users.length})` },
         { key: "reports", label: `Service Reports (${reports.length})` },
         { key: "userReports", label: `User Reports (${userReports.length})` },
+        { key: "boosts", label: `Boosts (${boosts.length})` },
         { key: "broadcast", label: "Broadcast" },
       ];
 
@@ -386,6 +389,30 @@
         });
         content.querySelectorAll("[data-suspend-user]").forEach((el) => {
           el.onclick = () => suspendReportedUser(el.dataset.suspendUser, el.dataset.userId);
+        });
+
+      } else if (tab === "boosts") {
+        content.innerHTML = `<div class="list">${
+          boosts.length ? boosts.map((b) => `
+            <div class="card">
+              <div class="card-title">${esc(b.title)}</div>
+              <div class="card-sub">${esc(b.business_name || b.user_name || "Vendor")} · ${esc(formatPhone(b.user_phone))}</div>
+              <div class="card-detail">Requested ${esc(formatDate(b.requested_at))}${b.transaction_ref ? ` · Ref: ${esc(b.transaction_ref)}` : ""}</div>
+              <button type="button" class="view-link" data-view-service="${b.service_id}">View service →</button>
+              <div class="card-actions">
+                <button class="approve-btn" type="button" data-boost-approve="${b.id}">Approve</button>
+                <button class="reject-btn" type="button" data-boost-reject="${b.id}">Reject</button>
+              </div>
+            </div>`).join("") : `<div class="empty-text">No pending boost requests.</div>`
+        }</div>`;
+        content.querySelectorAll("[data-view-service]").forEach((el) => {
+          el.onclick = () => { location.href = `/service.html?id=${el.dataset.viewService}`; };
+        });
+        content.querySelectorAll("[data-boost-approve]").forEach((el) => {
+          el.onclick = () => actBoost(el.dataset.boostApprove, "approve");
+        });
+        content.querySelectorAll("[data-boost-reject]").forEach((el) => {
+          el.onclick = () => actBoost(el.dataset.boostReject, "reject");
         });
 
       } else if (tab === "broadcast") {
@@ -565,6 +592,28 @@
         ZEUI.toast("Account suspended.", "success");
       } catch (err) {
         ZEUI.error(err.message || "Could not suspend user.");
+      }
+    }
+
+    async function actBoost(id, action) {
+      const item = boosts.find((b) => String(b.id) === String(id));
+      const title = item?.title || "this service";
+      const ok = await ZEUI.confirm({
+        title: action === "approve" ? "Approve boost?" : "Reject boost?",
+        message: action === "approve"
+          ? `Feature "${title}" on Home for 24 hours?`
+          : `Reject the boost request for "${title}"?`,
+        okText: action === "approve" ? "Approve" : "Reject",
+        danger: action === "reject",
+      });
+      if (!ok) return;
+      try {
+        await ZE.api(`/boost/${id}/${action}`, { method: "PUT" });
+        boosts = boosts.filter((b) => String(b.id) !== String(id));
+        ZEUI.toast(action === "approve" ? "Boost is live for 24 hours." : "Boost request rejected.", "success");
+        render();
+      } catch (err) {
+        ZEUI.error(err.message || "Could not update boost.");
       }
     }
 

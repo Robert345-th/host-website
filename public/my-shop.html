@@ -12,8 +12,8 @@
     :root {
       --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
       --text: #211D1A; --subtext: #5C5955; --black: #111111;
-      --orange: #C2410C; --orange-hot: #EA580C; --cream: #FFF3E8;
-      --price-red: #A3131C; --warn-bg: #FFF3E0; --warn-text: #7A3E00;
+      --orange: #C2410C; --cream: #FFF3E8; --price-red: #A3131C;
+      --warn-bg: #FFF3E0; --warn-text: #7A3E00; --gold: #F5C518;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -24,13 +24,21 @@
     button { font: inherit; }
     .topbar {
       background: var(--orange); padding: 16px;
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }
     .brand { color: var(--cream); font-size: 20px; font-weight: 700; }
     .sub-brand { color: #FFD8B8; font-size: 12px; margin-top: 2px; }
+    .top-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .icon-btns { display: flex; gap: 6px; }
+    .icon-btn {
+      width: 34px; height: 34px; border-radius: 17px; border: none;
+      background: rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .icon-btn svg { width: 17px; height: 17px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .sell-btn {
-      background: #111; color: #F5C518; border: none;
-      padding: 8px 14px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer;
+      background: #111; color: var(--gold); border: none;
+      padding: 8px 12px; border-radius: 20px; font-weight: 700; font-size: 12px; cursor: pointer;
     }
     .banner {
       display: none; margin: 12px; padding: 12px 14px; border-radius: 10px;
@@ -38,20 +46,27 @@
     }
     .banner.show { display: block; }
     .center-box { padding: 60px 24px; text-align: center; color: var(--subtext); }
-    .list { padding: 14px; }
-    .row {
-      display: flex; align-items: center; background: var(--card);
-      border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px;
+    .listing-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px 14px;
     }
-    .thumb {
-      width: 60px; height: 60px; border-radius: 10px; background: #E9E2D3;
-      display: flex; align-items: center; justify-content: center; overflow: hidden;
-      margin-right: 12px; flex-shrink: 0; font-size: 24px;
+    .gcard {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+      position: relative;
     }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .row-info { flex: 1; min-width: 0; }
-    .row-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .row-price { font-size: 13px; color: var(--price-red); font-weight: 700; margin-top: 2px; }
+    .gcard .photo { height: 130px; background: #E9E2D3; display: flex; align-items: center; justify-content: center; }
+    .gcard .photo img { width: 100%; height: 100%; object-fit: cover; }
+    .gcard .body { padding: 10px; }
+    .gcard .title { font-size: 13px; font-weight: 600; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .gcard .price { font-size: 13px; font-weight: 700; color: var(--orange); margin-top: 4px; }
+    .gcard .meta { font-size: 11px; color: var(--subtext); margin-top: 3px; }
+    .manage {
+      position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 14px;
+      border: none; background: rgba(0,0,0,0.55); color: #fff; font-weight: 800; cursor: pointer;
+    }
+    .boost-chip {
+      position: absolute; top: 8px; left: 8px; background: var(--gold); color: #111;
+      font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 999px;
+    }
     .status-badge {
       display: inline-block; padding: 2px 8px; border-radius: 10px;
       font-size: 10px; font-weight: 700; margin-top: 4px; text-transform: uppercase;
@@ -59,37 +74,65 @@
     .status-active { background: #E7F5EC; color: #1F7A43; }
     .status-pending { background: var(--warn-bg); color: var(--warn-text); }
     .status-rejected { background: #FBE7E8; color: var(--price-red); }
-    .status-removed { background: #EEE; color: var(--subtext); }
-    .del-btn {
-      width: 40px; height: 40px; border-radius: 20px; margin-left: 8px; flex-shrink: 0;
-      background: var(--bg); border: 1px solid var(--border); color: var(--price-red);
-      font-weight: 700; cursor: pointer; font-size: 18px; line-height: 1;
+    .sheet {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+      align-items: flex-end; justify-content: center;
     }
-    .thumb-ph {
-      width: 28px; height: 28px; color: var(--subtext); opacity: 0.7;
+    .sheet.open { display: flex; }
+    .sheet-box {
+      width: 100%; max-width: 480px; background: var(--bg);
+      border-radius: 20px 20px 0 0; padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
     }
-    .thumb-ph svg {
-      width: 100%; height: 100%; stroke: currentColor; fill: none;
-      stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+    .sheet-btn {
+      width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 13px; font-weight: 700; margin-bottom: 8px; cursor: pointer; text-align: left;
     }
+    .sheet-btn.danger { color: var(--price-red); }
   </style>
 </head>
 <body data-nav-active="shop">
   <div class="topbar">
     <div>
-      <div class="brand">My Shop</div>
+      <div class="brand" data-i18n="my_shop">My Shop</div>
       <div class="sub-brand" id="shopName">Your services</div>
     </div>
-    <button class="sell-btn" type="button" onclick="location.href='/post-service.html'">Post</button>
+    <div class="top-actions">
+      <div class="icon-btns">
+        <button class="icon-btn" type="button" id="editShopBtn" aria-label="Edit shop">
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </button>
+        <button class="icon-btn" type="button" id="insightsBtn" aria-label="Insights">
+          <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14v4"/><path d="M12 9v9"/><path d="M17 5v13"/></svg>
+        </button>
+        <button class="icon-btn" type="button" id="viewShopBtn" aria-label="View shop">
+          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+        <button class="icon-btn" type="button" id="shareShopBtn" aria-label="Share">
+          <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        </button>
+      </div>
+      <button class="sell-btn" type="button" id="postBtn">+ Post</button>
+    </div>
   </div>
 
   <div class="banner" id="banner"></div>
   <div id="status" class="center-box">Loading…</div>
-  <div class="list" id="list" hidden></div>
+  <div class="listing-grid" id="list" hidden></div>
+
+  <div class="sheet" id="manageSheet">
+    <div class="sheet-box">
+      <button class="sheet-btn" type="button" id="manageEdit">Edit</button>
+      <button class="sheet-btn" type="button" id="manageBoost">Boost</button>
+      <button class="sheet-btn danger" type="button" id="manageDelete">Remove</button>
+      <button class="sheet-btn" type="button" id="manageCancel">Cancel</button>
+    </div>
+  </div>
 
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/ui.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/share.js"></script>
   <script src="/js/pwa-install.js"></script>
   <script src="/js/bottom-nav.js"></script>
   <script>
@@ -108,27 +151,58 @@
         banner.classList.add("show");
       }
 
+      document.getElementById("editShopBtn").onclick = () => { location.href = "/edit-shop-profile.html"; };
+      document.getElementById("insightsBtn").onclick = () => { location.href = "/seller-insights.html"; };
+      document.getElementById("viewShopBtn").onclick = () => { location.href = `/vendor.html?id=${user.id}`; };
+      document.getElementById("shareShopBtn").onclick = () => ZEShare.shareShop(user.id, user.business_name || user.name);
+      document.getElementById("postBtn").onclick = () => { location.href = "/post-service.html"; };
+
       function statusLabel(s) {
         if (s === "active") return ["Live", "status-active"];
-        if (s === "pending") return ["Pending approval", "status-pending"];
+        if (s === "pending") return ["Pending", "status-pending"];
         if (s === "rejected") return ["Rejected", "status-rejected"];
-        return [s || "Unknown", "status-removed"];
+        return [s || "", ""];
       }
 
-      function escapeHtml(str) {
-        return String(str)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
+      let manageId = null;
+      const sheet = document.getElementById("manageSheet");
+      function openManage(id) {
+        manageId = id;
+        sheet.classList.add("open");
       }
+      document.getElementById("manageCancel").onclick = () => sheet.classList.remove("open");
+      sheet.addEventListener("click", (e) => { if (e.target === sheet) sheet.classList.remove("open"); });
+      document.getElementById("manageEdit").onclick = () => {
+        if (manageId) location.href = `/edit-service.html?id=${manageId}`;
+      };
+      document.getElementById("manageBoost").onclick = () => {
+        if (manageId) location.href = `/boost-service.html?id=${manageId}`;
+      };
+      document.getElementById("manageDelete").onclick = async () => {
+        const ok = await ZEUI.confirm({
+          title: "Remove service",
+          message: "Remove this service?",
+          okText: "Remove",
+          danger: true,
+        });
+        if (!ok || !manageId) return;
+        try {
+          await ZE.api(`/services/${manageId}`, { method: "DELETE" });
+          sheet.classList.remove("open");
+          ZEUI.toast("Service removed.", "success");
+          load();
+        } catch (err) {
+          ZEUI.error(err.message || "Could not delete.");
+        }
+      };
 
       async function load() {
         try {
           const items = await ZE.api("/services/mine");
           if (!items.length) {
-            status.textContent = "No services yet. Tap Post to add one.";
             list.hidden = true;
+            status.hidden = false;
+            status.textContent = "You haven't posted anything yet.";
             return;
           }
           status.hidden = true;
@@ -136,45 +210,40 @@
           list.innerHTML = items.map((item) => {
             const photo = ZE.firstPhoto(item.photos);
             const [label, cls] = statusLabel(item.status);
-            const price = item.price != null ? `K${Number(item.price).toLocaleString()}` : "Ask for quote";
+            const boosted = item.boosted_until && new Date(item.boosted_until) > new Date();
             const img = photo
-              ? `<img src="${photo}" alt="" loading="lazy" />`
-              : `<div class="thumb-ph" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="m21 16-5-5-4 4-2-2-5 5"/></svg></div>`;
+              ? `<img src="${photo}" alt="" />`
+              : `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5C5955"><rect x="3" y="5" width="18" height="14" rx="2"/></svg>`;
             return `
-              <div class="row" data-id="${item.id}">
-                <a class="row-main" href="/edit-service.html?id=${item.id}" style="display:flex;flex:1;align-items:center;min-width:0;">
-                  <div class="thumb">${img}</div>
-                  <div class="row-info">
-                    <div class="row-title">${escapeHtml(item.title || "Untitled")}</div>
-                    <div class="row-price">${price}</div>
+              <div class="gcard">
+                ${boosted ? `<div class="boost-chip">Boosted</div>` : ""}
+                <button class="manage" type="button" data-id="${item.id}" aria-label="Manage">⋮</button>
+                <a href="/service.html?id=${item.id}">
+                  <div class="photo">${img}</div>
+                  <div class="body">
+                    <div class="title">${esc(item.title || "Untitled")}</div>
+                    <div class="price">${ZE.formatPrice(item.price)}</div>
+                    <div class="meta">${item.view_count || 0} views</div>
                     <span class="status-badge ${cls}">${label}</span>
                   </div>
                 </a>
-                <button class="del-btn" type="button" data-del="${item.id}" aria-label="Delete">×</button>
               </div>`;
           }).join("");
-
-          list.querySelectorAll("[data-del]").forEach((btn) => {
-            btn.addEventListener("click", async () => {
-              const ok = await ZEUI.confirm({
-                title: "Remove service",
-                message: "Remove this service?",
-                okText: "Remove",
-                danger: true,
-              });
-              if (!ok) return;
-              try {
-                await ZE.api(`/services/${btn.dataset.del}`, { method: "DELETE" });
-                ZEUI.toast("Service removed.", "success");
-                load();
-              } catch (err) {
-                ZEUI.error(err.message || "Could not delete.");
-              }
+          list.querySelectorAll(".manage").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openManage(btn.dataset.id);
             });
           });
         } catch (err) {
           status.textContent = err.message || "Could not load your shop.";
         }
+      }
+
+      function esc(str) {
+        return String(str || "")
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
       }
 
       load();

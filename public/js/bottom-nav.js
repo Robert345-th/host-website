@@ -6,9 +6,13 @@
     install: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
   };
   const ITEMS = [
-    { key: "home", href: "/", label: "Home" },
-    { key: "shop", href: "/my-shop.html", label: "My Shop" },
+    { key: "home", href: "/", label: "Home", labelKey: "home" },
+    { key: "shop", href: "/my-shop.html", label: "My Shop", labelKey: "my_shop" },
   ];
+
+  function navLabel(key, fallback) {
+    return typeof t === "function" ? t(key) : fallback;
+  }
 
   function injectStyles() {
     if (document.getElementById(STYLE_ID)) return;
@@ -44,8 +48,8 @@
   }
 
   function installNavLabel() {
-    if (/Android/i.test(navigator.userAgent)) return "Download";
-    return "Install";
+    if (/Android/i.test(navigator.userAgent)) return navLabel("nav_download", "Download");
+    return navLabel("nav_install", "Install");
   }
 
   function renderInstallNavItem() {
@@ -88,7 +92,7 @@
       return `
         <a href="${item.href}" class="nav-item${isActive ? " active" : ""}"${needsLogin ? ' data-require-login="1"' : ""}>
           <div class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[item.key]}</svg></div>
-          <div>${item.label}</div>
+          <div>${navLabel(item.labelKey, item.label)}</div>
         </a>`;
     }).join("") + renderInstallNavItem();
 
@@ -116,4 +120,5 @@
 
   window.addEventListener("pwa-install-ready", boot);
   window.addEventListener("appinstalled", boot);
+  window.addEventListener("langchange", boot);
 })();

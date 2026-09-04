@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Shop photo - ZedEvents</title>
+  <meta name="theme-color" content="#C2410C" />
+  <style>
+    :root { --bg:#F4F1EC; --card:#fff; --border:#E2E0DC; --text:#211D1A; --orange:#C2410C; --cream:#FFF3E8; --sub:#5C5955; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; background:var(--bg); color:var(--text); }
+    .topbar { background:var(--orange); padding:16px; display:flex; align-items:center; gap:12px; }
+    .back { width:40px; height:40px; border:none; background:none; color:var(--cream); }
+    .title { color:var(--cream); font-size:18px; font-weight:700; }
+    .content { padding:16px; max-width:480px; margin:0 auto; text-align:center; }
+    .preview { width:120px; height:120px; border-radius:18px; object-fit:cover; background:#FBEAD9; margin:12px auto; display:block; }
+    .btn { width:100%; margin-top:10px; background:var(--orange); color:#fff; border:none; border-radius:12px; padding:14px; font-weight:700; }
+    .ghost { background:var(--card); color:var(--text); border:1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <button class="back" type="button" onclick="history.back()">←</button>
+    <div class="title">Shop photo</div>
+  </div>
+  <div class="content">
+    <img class="preview" id="preview" alt="" />
+    <input id="file" type="file" accept="image/*" />
+    <button class="btn" type="button" id="save">Save photo</button>
+    <button class="btn ghost" type="button" id="clear">Remove photo</button>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/ui.js"></script>
+  <script>
+    if (!ZEAuth.requireLogin("/edit-shop-photo.html")) {}
+    else {
+      const preview = document.getElementById("preview");
+      (async () => {
+        const p = await ZE.api("/auth/vendor-profile");
+        if (p.business_photo_url) preview.src = p.business_photo_url;
+      })();
+      document.getElementById("file").onchange = (e) => {
+        const f = e.target.files[0];
+        if (f) preview.src = URL.createObjectURL(f);
+      };
+      document.getElementById("save").onclick = async () => {
+        const f = document.getElementById("file").files[0];
+        if (!f) { ZEUI.error("Choose a photo first."); return; }
+        const url = await ZE.uploadImage(f);
+        await ZE.api("/auth/vendor-profile", { method: "PUT", body: JSON.stringify({ business_photo_url: url }) });
+        const user = ZEAuth.getUser() || {};
+        ZEAuth.setSession(ZEAuth.getToken(), { ...user, business_photo_url: url });
+        ZEUI.toast("Photo saved.", "success");
+        location.href = "/edit-shop-profile.html";
+      };
+      document.getElementById("clear").onclick = async () => {
+        await ZE.api("/auth/vendor-profile", { method: "PUT", body: JSON.stringify({ business_photo_url: null }) });
+        ZEUI.toast("Photo removed.", "success");
+        location.href = "/edit-shop-profile.html";
+      };
+    }
+  </script>
+</body>
+</html>

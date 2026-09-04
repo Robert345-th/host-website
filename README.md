@@ -1,16 +1,27 @@
 # ZedEvents Website
 
-Customer website for ZedEvents (browse services, login, favorites).
+Customer website for ZedEvents — browse event services, message vendors, and run a shop.
 
-Uses API: `https://zedevents-production.up.railway.app`
+API: `https://zedevents-production.up.railway.app`
 
 The site is a PWA. On a phone, tap **Download** in the bottom bar (or **Install** on iPhone) to add ZedEvents to the home screen.
 
 ## Run locally
 
-```cmd
-cd C:\Users\Rober\Downloads\zedevents-website
+```bash
+cd zedevents-website
+npm install
 npm start
 ```
 
-Then open http://localhost:5173
+Then open http://localhost:3000 (or set `PORT`).
+
+## What’s in this app
+
+- Home feed with search, categories, nearby, boosted services, verified shops, and top vendors
+- Save a search to get notified of new matches
+- Service detail: share (WhatsApp / copy), favorites, report, message
+- Vendor profiles: follow, reviews, verified mark
+- My Shop: two-column grid, insights, boost, edit shop name / photo / bio
+- Settings: English / Bemba / Nyanja, following, saved searches, referrals, privacy, terms
+- Offline page when the network is down

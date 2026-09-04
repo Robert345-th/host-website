@@ -48,6 +48,17 @@
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
     .profile-name { font-size: 20px; font-weight: 700; }
     .profile-type { font-size: 12px; color: var(--subtext); margin-top: 2px; }
+    .verified-stamp {
+      display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 800;
+      color: #1F7A43; background: #E7F5EC; border-radius: 999px; padding: 1px 7px;
+    }
+    .follow-row { display: flex; gap: 8px; margin-top: 12px; }
+    .ghost-btn {
+      flex: 1; background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px; font-weight: 700;
+    }
+    .ghost-btn.on { background: #E7F5EC; color: #1F7A43; border-color: #BFE5CE; }
+    .counts { font-size: 12px; color: var(--subtext); margin-top: 8px; }
     .bio { font-size: 14px; line-height: 1.55; color: var(--text); margin-top: 14px; }
     .section-label {
       font-size: 11px; font-weight: 700; color: var(--subtext);
@@ -85,11 +96,15 @@
         <div class="avatar" id="avatar">V</div>
         <div>
           <div class="profile-name" id="name">—</div>
-          <div class="profile-type">Event vendor</div>
+          <div class="profile-type">Event vendor <span id="verified"></span></div>
+          <div class="counts" id="counts"></div>
         </div>
       </div>
       <p class="bio" id="bio"></p>
-      <button type="button" class="primary-btn" id="msgBtn" hidden>Message vendor</button>
+      <div class="follow-row">
+        <button type="button" class="ghost-btn" id="followBtn" hidden>Follow</button>
+        <button type="button" class="primary-btn" id="msgBtn" hidden style="margin-top:0;flex:1;">Message</button>
+      </div>
     </div>
     <div class="section-label">Reviews</div>
     <div id="reviews"></div>
@@ -124,6 +139,9 @@
         const name = profile.business_name || profile.name || "Vendor";
         document.getElementById("name").textContent = name;
         document.getElementById("bio").textContent = profile.business_bio || "No bio yet.";
+        if (profile.is_verified) {
+          document.getElementById("verified").innerHTML = '<span class="verified-stamp">✓ Verified</span>';
+        }
         const avatar = document.getElementById("avatar");
         if (profile.business_photo_url) {
           avatar.innerHTML = `<img src="${esc(profile.business_photo_url)}" alt="" />`;
@@ -133,19 +151,50 @@
 
         const me = ZEAuth.getUser();
         const msgBtn = document.getElementById("msgBtn");
-        if (me && String(me.id) !== String(vendorId)) {
-          msgBtn.hidden = false;
-          msgBtn.onclick = () => {
+        const followBtn = document.getElementById("followBtn");
+        const isOwner = me && String(me.id) === String(vendorId);
+
+        function paintCounts(counts) {
+          document.getElementById("counts").innerHTML =
+            `<a href="/following.html?id=${vendorId}&tab=followers">${counts.followers || 0} followers</a> · <a href="/following.html?id=${vendorId}&tab=following">${counts.following || 0} following</a>`;
+        }
+
+        if (!isOwner) {
+          followBtn.hidden = false;
+          if (me) {
+            msgBtn.hidden = false;
+            msgBtn.onclick = () => {
+              if (!ZEAuth.requireLogin(location.pathname + location.search)) return;
+              location.href = `/chat.html?userId=${vendorId}`;
+            };
+          }
+          async function refreshFollow() {
+            try {
+              const countsP = ZE.api(`/follows/counts/${vendorId}`);
+              const stP = me ? ZE.api(`/follows/status/${vendorId}`) : Promise.resolve({ following: false });
+              const [st, counts] = await Promise.all([stP, countsP]);
+              followBtn.textContent = st.following ? "Following" : "Follow";
+              followBtn.classList.toggle("on", !!st.following);
+              paintCounts(counts);
+            } catch { /* ignore */ }
+          }
+          followBtn.onclick = async () => {
             if (!ZEAuth.requireLogin(location.pathname + location.search)) return;
-            location.href = `/chat.html?userId=${vendorId}`;
+            const following = followBtn.classList.contains("on");
+            await ZE.api(`/follows/${vendorId}`, { method: following ? "DELETE" : "POST" });
+            refreshFollow();
           };
+          refreshFollow();
+        } else {
+          ZE.api(`/follows/counts/${vendorId}`).then(paintCounts).catch(() => {});
         }
 
         const box = document.getElementById("reviews");
-        if (!reviews.length) {
+        const reviewList = Array.isArray(reviews) ? reviews : (reviews.reviews || []);
+        if (!reviewList.length) {
           box.innerHTML = `<div class="empty-text">No reviews yet.</div>`;
         } else {
-          box.innerHTML = reviews.map((r) => `
+          box.innerHTML = reviewList.map((r) => `
             <div class="review">
               <div class="review-stars">${"★".repeat(r.rating || 0)}${"☆".repeat(5 - (r.rating || 0))}</div>
               <div class="review-text">${esc(r.comment || "No comment.")}</div>

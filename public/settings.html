@@ -70,6 +70,11 @@
     }
     input:checked + .slider { background: var(--orange); }
     input:checked + .slider::before { transform: translateX(18px); }
+    .chip {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text);
+    }
+    .chip.on { background: var(--orange); border-color: var(--orange); color: #fff; }
     .version-text { text-align: center; color: var(--subtext); font-size: 11px; margin-top: 24px; }
     .modal-overlay {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200;
@@ -111,6 +116,13 @@
       <div class="profile-phone" id="phone"></div>
     </div>
 
+    <div class="section-label" data-i18n="language">Language</div>
+    <div class="row" style="cursor:default;flex-wrap:wrap;gap:8px;">
+      <button class="chip" type="button" id="langEn">English</button>
+      <button class="chip" type="button" id="langBem">Bemba</button>
+      <button class="chip" type="button" id="langNy">Nyanja</button>
+    </div>
+
     <div class="section-label">Quick links</div>
     <button class="row" type="button" onclick="location.href='/my-shop.html'">
       <div>
@@ -136,6 +148,40 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
           Favorites
         </div>
+      </div>
+    </button>
+    <button class="row" type="button" onclick="location.href='/following.html'">
+      <div>
+        <div class="row-title">Following</div>
+        <div class="row-sub">Shops you follow</div>
+      </div>
+    </button>
+    <button class="row" type="button" onclick="location.href='/saved-searches.html'">
+      <div>
+        <div class="row-title">Saved searches</div>
+        <div class="row-sub">Get a ping when something matches</div>
+      </div>
+    </button>
+    <button class="row" type="button" onclick="location.href='/referrals.html'">
+      <div>
+        <div class="row-title">Referrals</div>
+        <div class="row-sub">Your invite code and boost credits</div>
+      </div>
+    </button>
+    <button class="row" type="button" onclick="location.href='/report-user.html'">
+      <div>
+        <div class="row-title">Report a user</div>
+        <div class="row-sub">Scam, abuse, or spam</div>
+      </div>
+    </button>
+    <button class="row" type="button" onclick="location.href='/privacy-policy.html'">
+      <div>
+        <div class="row-title">Privacy policy</div>
+      </div>
+    </button>
+    <button class="row" type="button" onclick="location.href='/terms.html'">
+      <div>
+        <div class="row-title">Terms of use</div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/register-shop.html'">
@@ -229,6 +275,7 @@
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/ui.js"></script>
+  <script src="/js/lang.js"></script>
   <script src="/js/pwa-install.js"></script>
   <script>
     if (!ZEAuth.requireLogin("/settings.html")) {
@@ -281,6 +328,17 @@
           ZEUI.error(err.message || "Could not delete account.");
         }
       };
+
+      function paintLang() {
+        const lang = typeof getLang === "function" ? getLang() : "en";
+        document.getElementById("langEn").classList.toggle("on", lang === "en");
+        document.getElementById("langBem").classList.toggle("on", lang === "bem");
+        document.getElementById("langNy").classList.toggle("on", lang === "ny");
+      }
+      document.getElementById("langEn").onclick = () => { setLangAndApply("en"); paintLang(); };
+      document.getElementById("langBem").onclick = () => { setLangAndApply("bem"); paintLang(); };
+      document.getElementById("langNy").onclick = () => { setLangAndApply("ny"); paintLang(); };
+      paintLang();
 
       if (typeof isPwaStandalone === "function" && isPwaStandalone()) {
         document.getElementById("settingsInstallRow").style.display = "none";

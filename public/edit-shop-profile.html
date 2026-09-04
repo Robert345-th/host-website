@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Edit shop - ZedEvents</title>
+  <meta name="theme-color" content="#C2410C" />
+  <link rel="manifest" href="/manifest.json" />
+  <style>
+    :root { --bg:#F4F1EC; --card:#fff; --border:#E2E0DC; --text:#211D1A; --sub:#5C5955; --orange:#C2410C; --cream:#FFF3E8; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; background:var(--bg); color:var(--text); }
+    .topbar { background:var(--orange); padding:16px; display:flex; align-items:center; gap:12px; }
+    .back { width:40px; height:40px; border:none; background:none; color:var(--cream); }
+    .title { color:var(--cream); font-size:18px; font-weight:700; }
+    .row { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin:12px; display:flex; justify-content:space-between; align-items:center; text-decoration:none; color:inherit; }
+    .name { font-weight:700; }
+    .sub { font-size:12px; color:var(--sub); margin-top:3px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <button class="back" type="button" onclick="history.back()">←</button>
+    <div class="title">Edit shop</div>
+  </div>
+  <a class="row" href="/edit-shop-photo.html"><div><div class="name">Shop photo</div><div class="sub">Shown on your profile</div></div><span>›</span></a>
+  <a class="row" href="/edit-shop-name.html"><div><div class="name">Shop name</div><div class="sub">The name customers see</div></div><span>›</span></a>
+  <a class="row" href="/edit-shop-bio.html"><div><div class="name">Bio</div><div class="sub">A short description of your work</div></div><span>›</span></a>
+</body>
+</html>

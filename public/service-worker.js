@@ -1,7 +1,8 @@
-const CACHE = "zedevents-shell-v1";
+const CACHE = "zedevents-shell-v2";
 const PRECACHE = [
   "/",
   "/index.html",
+  "/offline.html",
   "/icon-192.png",
   "/icon-512.png",
   "/manifest.json",
@@ -50,8 +51,8 @@ self.addEventListener("fetch", (event) => {
       const cached = await cache.match(request);
       if (cached) return cached;
       if (request.mode === "navigate") {
-        const home = await cache.match("/index.html") || await cache.match("/");
-        if (home) return home;
+        const offline = await cache.match("/offline.html");
+        if (offline) return offline;
       }
       throw new Error("offline");
     }

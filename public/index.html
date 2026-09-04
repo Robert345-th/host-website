@@ -137,6 +137,28 @@
     .vendor { font-size: 11px; color: var(--subtext); margin-top: 3px; }
     .distance { font-size: 10px; color: var(--orange-hot); font-weight: 600; margin-top: 2px; }
     .status { text-align: center; padding: 60px 20px; color: var(--subtext); }
+    .verified-stamp {
+      display: inline-block; margin-left: 4px; font-size: 10px; font-weight: 800;
+      color: #1F7A43; background: #E7F5EC; border-radius: 999px; padding: 1px 6px;
+    }
+    .boost-chip {
+      position: absolute; top: 8px; left: 8px; background: #F5C518; color: #111;
+      font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 999px; z-index: 1;
+    }
+    .save-search-bar { padding: 0 12px 10px; }
+    .save-search-btn {
+      width: 100%; background: #fff; border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; font-weight: 700; font-size: 13px; cursor: pointer; color: var(--orange);
+    }
+    .top-vendors { padding: 4px 12px 12px; }
+    .tv-label { font-size: 11px; font-weight: 800; color: var(--subtext); text-transform: uppercase; margin-bottom: 8px; }
+    .tv-row { display: flex; gap: 8px; overflow-x: auto; }
+    .tv-chip {
+      flex-shrink: 0; background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 8px 10px; min-width: 120px; text-decoration: none; color: inherit;
+    }
+    .tv-name { font-size: 12px; font-weight: 700; }
+    .tv-meta { font-size: 11px; color: var(--subtext); }
   </style>
 </head>
 <body data-nav-active="home" data-pwa-banner="1">
@@ -175,20 +197,31 @@
     </div>
 
     <div class="search-row">
-      <input class="search-input" id="search" type="search" placeholder="Search catering, DJs, tents..." />
+      <input class="search-input" id="search" type="search" data-i18n-placeholder="search_placeholder" placeholder="Search catering, DJs, tents..." />
     </div>
     <div class="chips-row" id="cats">
-      <button type="button" class="chip active" data-id="">All</button>
-      <button type="button" class="chip" data-id="__nearby__">Nearby</button>
+      <button type="button" class="chip active" data-id="" data-i18n="all">All</button>
+      <button type="button" class="chip" data-id="__nearby__" data-i18n="nearby">Nearby</button>
     </div>
   </div>
 
+  <div class="top-vendors" id="topSellersWrap" hidden>
+    <div class="tv-label" data-i18n="top_vendors">Top vendors</div>
+    <div class="tv-row" id="topSellers"></div>
+  </div>
+  <div class="save-search-bar" id="saveSearchWrap" hidden>
+    <button class="save-search-btn" type="button" id="saveSearchBtn" data-i18n="save_search">Notify me of new matches</button>
+  </div>
   <div id="status" class="status">Loading services…</div>
   <div class="grid" id="grid" hidden></div>
 
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
+  <script src="/js/ui.js"></script>
   <script src="/js/location.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/lang-gate.js"></script>
+  <script src="/js/share.js"></script>
   <script src="/js/pwa-install.js"></script>
   <script src="/js/bottom-nav.js"></script>
   <script>
@@ -280,10 +313,10 @@
         grid.hidden = true;
         status.hidden = false;
         status.textContent = search.value.trim()
-          ? "No services match your search."
+          ? (typeof t === "function" ? t("no_match") : "No services match your search.")
           : sortNearby && !myCoords
             ? "Turn on location to see nearby services."
-            : "No services posted yet.";
+            : (typeof t === "function" ? t("no_services") : "No services posted yet.");
         return;
       }
       status.hidden = true;
@@ -292,18 +325,20 @@
         const photo = ZE.firstPhoto(item.photos);
         const vendor = item.business_name || item.vendor_name || "Vendor";
         const dist = formatDistance(item.distanceKm);
+        const verified = item.is_verified ? `<span class="verified-stamp">✓ ${typeof t === "function" ? t("verified") : "Verified"}</span>` : "";
+        const boosted = item.boosted_until && new Date(item.boosted_until) > new Date();
         const img = photo
           ? `<img src="${photo}" alt="" loading="lazy" />`
           : `<div class="thumb-ph" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="m21 16-5-5-4 4-2-2-5 5"/></svg></div>`;
         return `
           <a class="card" href="/service.html?id=${item.id}">
-            <div class="thumb">${img}</div>
+            <div class="thumb">${boosted ? `<div class="boost-chip">${typeof t === "function" ? t("boosted") : "Boosted"}</div>` : ""}${img}</div>
             <div class="card-info">
               <div class="card-cat">${escapeHtml(item.category || "Service")}</div>
               <div class="title">${escapeHtml(item.title || "Untitled")}</div>
               <div class="price">${ZE.formatPrice(item.price)}</div>
               ${dist ? `<div class="distance">${escapeHtml(dist)}</div>` : ""}
-              <div class="vendor">${escapeHtml(vendor)}</div>
+              <div class="vendor">${escapeHtml(vendor)}${verified}</div>
             </div>
           </a>`;
       }).join("");
@@ -324,6 +359,8 @@
         });
       }
       renderCards(filtered);
+      const wrap = document.getElementById("saveSearchWrap");
+      wrap.hidden = !(q || (activeCategory && activeCategory !== "__nearby__"));
     }
 
     async function loadCategories() {
@@ -342,7 +379,7 @@
 
     async function loadServices() {
       status.hidden = false;
-      status.textContent = "Loading services…";
+        status.textContent = typeof t === "function" ? t("loading_services") : "Loading services…";
       grid.hidden = true;
       try {
         const path = activeCategory && activeCategory !== "__nearby__"
@@ -379,8 +416,46 @@
     });
 
     search.addEventListener("input", applyFilter);
+
+    document.getElementById("saveSearchBtn").onclick = async () => {
+      if (!ZEAuth.requireLogin("/")) return;
+      const chip = catsEl.querySelector(".chip.active");
+      const catName = chip && chip.dataset.id && chip.dataset.id !== "__nearby__" ? chip.textContent : "All";
+      try {
+        await ZE.api("/saved-searches", {
+          method: "POST",
+          body: JSON.stringify({
+            query: search.value.trim(),
+            category: catName,
+            city: "",
+          }),
+        });
+        ZEUI.toast(typeof t === "function" ? t("save_search_saved") : "We'll notify you when something matches.", "success");
+      } catch (err) {
+        ZEUI.error(err.message || "Could not save search.");
+      }
+    };
+
+    async function loadTopVendors() {
+      try {
+        const rows = await ZE.api("/reviews/leaderboard");
+        if (!rows.length) return;
+        const wrap = document.getElementById("topSellersWrap");
+        const row = document.getElementById("topSellers");
+        wrap.hidden = false;
+        row.innerHTML = rows.map((v, i) => {
+          const name = v.business_name || v.name || "Vendor";
+          return `<a class="tv-chip" href="/vendor.html?id=${v.id}">
+            <div class="tv-name">${i + 1}. ${escapeHtml(name)}${v.is_verified ? " ✓" : ""}</div>
+            <div class="tv-meta">★ ${v.average || "—"} · ${v.total || 0}</div>
+          </a>`;
+        }).join("");
+      } catch { /* ignore */ }
+    }
+
     paintAuth();
     loadCategories();
+    loadTopVendors();
     if (!myCoords) {
       ZELocation.getDeviceCoords()
         .then((coords) => {

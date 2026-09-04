@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Shop bio - ZedEvents</title>
+  <meta name="theme-color" content="#C2410C" />
+  <style>
+    :root { --bg:#F4F1EC; --card:#fff; --border:#E2E0DC; --text:#211D1A; --orange:#C2410C; --cream:#FFF3E8; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; background:var(--bg); color:var(--text); }
+    .topbar { background:var(--orange); padding:16px; display:flex; align-items:center; gap:12px; }
+    .back { width:40px; height:40px; border:none; background:none; color:var(--cream); }
+    .title { color:var(--cream); font-size:18px; font-weight:700; }
+    .content { padding:16px; max-width:480px; margin:0 auto; }
+    textarea { width:100%; min-height:140px; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:12px; font:inherit; }
+    .btn { width:100%; margin-top:14px; background:var(--orange); color:#fff; border:none; border-radius:12px; padding:14px; font-weight:700; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <button class="back" type="button" onclick="history.back()">←</button>
+    <div class="title">Bio</div>
+  </div>
+  <div class="content">
+    <textarea id="bio" maxlength="500" placeholder="What do you offer?"></textarea>
+    <button class="btn" type="button" id="save">Save</button>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/ui.js"></script>
+  <script>
+    if (!ZEAuth.requireLogin("/edit-shop-bio.html")) {}
+    else {
+      (async () => {
+        const p = await ZE.api("/auth/vendor-profile");
+        document.getElementById("bio").value = p.business_bio || "";
+      })();
+      document.getElementById("save").onclick = async () => {
+        const business_bio = document.getElementById("bio").value.trim();
+        await ZE.api("/auth/vendor-profile", { method: "PUT", body: JSON.stringify({ business_bio }) });
+        ZEUI.toast("Bio saved.", "success");
+        location.href = "/edit-shop-profile.html";
+      };
+    }
+  </script>
+</body>
+</html>

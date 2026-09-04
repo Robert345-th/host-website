@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Following - ZedEvents</title>
+  <meta name="theme-color" content="#C2410C" />
+  <link rel="manifest" href="/manifest.json" />
+  <style>
+    :root { --bg:#F4F1EC; --card:#fff; --border:#E2E0DC; --text:#211D1A; --sub:#5C5955; --orange:#C2410C; --cream:#FFF3E8; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; background:var(--bg); color:var(--text); }
+    .topbar { background:var(--orange); padding:16px; display:flex; align-items:center; gap:12px; }
+    .back { width:40px; height:40px; border:none; background:none; color:var(--cream); }
+    .title { color:var(--cream); font-size:18px; font-weight:700; }
+    .tabs { display:flex; gap:8px; padding:12px; }
+    .tab { flex:1; border:1px solid var(--border); background:var(--card); border-radius:10px; padding:10px; font-weight:700; cursor:pointer; }
+    .tab.on { background:var(--orange); color:#fff; border-color:var(--orange); }
+    .row { display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; margin:0 12px 8px; text-decoration:none; color:inherit; }
+    .av { width:44px; height:44px; border-radius:12px; background:#FBEAD9; display:flex; align-items:center; justify-content:center; font-weight:800; color:var(--orange); overflow:hidden; }
+    .av img { width:100%; height:100%; object-fit:cover; }
+    .name { font-weight:700; }
+    .sub { font-size:12px; color:var(--sub); }
+    .empty { text-align:center; color:var(--sub); padding:40px 16px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <button class="back" type="button" onclick="history.back()">←</button>
+    <div class="title">Following</div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" type="button" data-tab="following">Following</button>
+    <button class="tab" type="button" data-tab="followers">Followers</button>
+  </div>
+  <div id="list"><div class="empty">Loading…</div></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const user = ZEAuth.getUser();
+    const shopId = params.get("id") || (user && user.id);
+    let tab = params.get("tab") || "following";
+    if (!shopId) {
+      ZEAuth.requireLogin("/following.html");
+    } else {
+      function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+      async function load() {
+        document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("on", b.dataset.tab === tab));
+        const list = document.getElementById("list");
+        try {
+          const rows = tab === "followers"
+            ? await ZE.api(`/follows/followers/${shopId}`)
+            : (String(shopId) === String(user && user.id)
+                ? await ZE.api("/follows")
+                : await ZE.api(`/follows/following-of/${shopId}`));
+          if (!rows.length) {
+            list.innerHTML = `<div class="empty">${tab === "followers" ? "No followers yet." : "Not following anyone yet."}</div>`;
+            return;
+          }
+          list.innerHTML = rows.map((r) => {
+            const name = r.display_name || r.business_name || r.name || "Shop";
+            const av = r.business_photo_url
+              ? `<img src="${esc(r.business_photo_url)}" alt="" />`
+              : esc(name.charAt(0).toUpperCase());
+            const extra = r.new_services ? `${r.new_services} new this week` : "";
+            return `<a class="row" href="/vendor.html?id=${r.id}"><div class="av">${av}</div><div><div class="name">${esc(name)}</div><div class="sub">${esc(extra)}</div></div></a>`;
+          }).join("");
+        } catch (err) {
+          list.innerHTML = `<div class="empty">${esc(err.message || "Could not load.")}</div>`;
+        }
+      }
+      document.querySelectorAll(".tab").forEach((b) => {
+        b.onclick = () => { tab = b.dataset.tab; load(); };
+      });
+      load();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Offline - ZedEvents</title>
+  <meta name="theme-color" content="#C2410C" />
+  <style>
+    :root { --bg:#F4F1EC; --text:#211D1A; --sub:#5C5955; --orange:#C2410C; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;
+      background:var(--bg); color:var(--text); min-height:100vh;
+      display:flex; align-items:center; justify-content:center; padding:24px; text-align:center;
+    }
+    h1 { font-size:22px; margin-bottom:8px; }
+    p { color:var(--sub); line-height:1.5; margin-bottom:18px; }
+    button {
+      background:var(--orange); color:#fff; border:none; border-radius:12px;
+      padding:14px 22px; font-weight:700; font-size:15px; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>You're offline</h1>
+    <p>Turn on mobile data or Wi‑Fi, then try again.</p>
+    <button type="button" onclick="location.href='/'">Try again</button>
+  </div>
+</body>
+</html>
