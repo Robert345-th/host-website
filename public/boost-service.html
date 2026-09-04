@@ -6,8 +6,9 @@
   <title>Boost service - ZedEvents</title>
   <meta name="theme-color" content="#C2410C" />
   <link rel="manifest" href="/manifest.json" />
+  <script src="/js/prefs.js"></script>
   <style>
-    :root { --bg:#F4F1EC; --card:#fff; --border:#E2E0DC; --text:#211D1A; --sub:#5C5955; --orange:#C2410C; --cream:#FFF3E8; --gold:#F5C518; }
+    :root { --bg:#F4F1EC; --card:#fff; --border:#E2E0DC; --text:#211D1A; --sub:#5C5955; --orange:#C2410C; --cream:#FFF3E8; --gold:#F5C518; --black:#111; }
     * { box-sizing:border-box; margin:0; padding:0; }
     body { font-family:-apple-system,"Helvetica Neue",Arial,sans-serif; background:var(--bg); color:var(--text); }
     .topbar { background:var(--orange); padding:16px; display:flex; align-items:center; gap:12px; }
@@ -15,61 +16,105 @@
     .title { color:var(--cream); font-size:18px; font-weight:700; }
     .content { padding:20px; max-width:480px; margin:0 auto; }
     .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:14px; }
+    .info { background:#FFF3E0; border-radius:14px; padding:14px; margin-bottom:14px; }
+    .info-t { font-weight:800; font-size:14px; color:#7A3E00; }
+    .info-b { font-size:13px; color:#7A3E00; margin-top:6px; line-height:1.45; }
+    .pay { background:var(--black); border-radius:14px; padding:16px; margin-bottom:14px; }
+    .pay-t { color:var(--gold); font-weight:800; margin-bottom:8px; }
+    .pay-b { color:#C9BFAF; font-size:13px; line-height:1.45; }
+    .phone { color:#fff; font-size:22px; font-weight:800; margin:8px 0; }
+    .price { font-size:32px; font-weight:800; color:var(--orange); }
     .btn { width:100%; border:none; border-radius:12px; padding:14px; font-weight:700; cursor:pointer; }
     .btn-main { background:var(--orange); color:#fff; }
-    .btn-alt { background:#111; color:var(--gold); margin-top:8px; }
+    .btn-alt { background:var(--black); color:var(--gold); margin-top:8px; }
     .sub { font-size:13px; color:var(--sub); line-height:1.45; margin-top:8px; }
     .credits { font-size:28px; font-weight:800; color:var(--orange); }
+    .label { font-size:11px; font-weight:700; color:var(--sub); text-transform:uppercase; margin:4px 0 8px; }
+    textarea { width:100%; min-height:110px; border:1px solid var(--border); border-radius:12px; padding:12px; font:inherit; background:var(--card); color:var(--text); }
   </style>
 </head>
 <body>
   <div class="topbar">
     <button class="back" type="button" onclick="history.back()">←</button>
-    <div class="title">Boost</div>
+    <div class="title" data-i18n="boost_title">Boost</div>
   </div>
-  <div class="content">
-    <div class="card">
-      <div>Free boost credits</div>
-      <div class="credits" id="credits">—</div>
-      <p class="sub">A boost puts this service at the top of Home for 24 hours.</p>
-    </div>
-    <button class="btn btn-main" type="button" id="creditBtn">Use 1 credit</button>
-    <button class="btn btn-alt" type="button" id="requestBtn">Request a boost</button>
-    <p class="sub" id="status"></p>
+  <div class="content" id="app">
+    <p class="sub" id="status">Loading…</p>
   </div>
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/ui.js"></script>
+  <script src="/js/lang.js"></script>
   <script>
     const id = new URLSearchParams(location.search).get("id");
+    const app = document.getElementById("app");
     if (!ZEAuth.requireLogin(location.pathname + location.search)) {}
-    else if (!id) document.getElementById("status").textContent = "Missing service.";
+    else if (!id) app.innerHTML = `<p class="sub">Missing service.</p>`;
     else {
-      const creditsEl = document.getElementById("credits");
-      const status = document.getElementById("status");
-      async function load() {
-        const data = await ZE.api("/boost/my-credits");
-        creditsEl.textContent = data.free_featured_credits || 0;
-      }
-      load().catch(() => { creditsEl.textContent = "0"; });
-      document.getElementById("creditBtn").onclick = async () => {
+      (async () => {
+        let credits = 0;
+        let payee = { phone: "0978012009", name: "Robert Zulu", amount: 50 };
         try {
-          await ZE.api(`/boost/${id}`, { method: "POST", body: JSON.stringify({ use_credit: true }) });
-          ZEUI.toast("Boost is live for 24 hours.", "success");
-          location.href = "/my-shop.html";
-        } catch (err) {
-          ZEUI.error(err.message || "Could not boost.");
+          const [c, p] = await Promise.all([
+            ZE.api("/boost/my-credits"),
+            ZE.api("/boost/payee").catch(() => payee),
+          ]);
+          credits = c.free_featured_credits || 0;
+          if (p && p.phone) payee = p;
+        } catch { /* keep defaults */ }
+
+        app.innerHTML = `
+          <div class="info">
+            <div class="info-t">${t("boost_what_title")}</div>
+            <div class="info-b">${t("boost_what_text")}</div>
+          </div>
+          <div class="card">
+            <div>${t("boost_credits")}</div>
+            <div class="credits">${credits}</div>
+            <p class="sub">${t("boost_credits_sub")}</p>
+            ${credits > 0 ? `<button class="btn btn-main" type="button" id="creditBtn">${t("use_free_boost")}</button>` : ""}
+          </div>
+          <div class="card">
+            <div class="label">${t("boost_price_label")}</div>
+            <div class="price">K${payee.amount || 50}</div>
+            <p class="sub">${t("boost_price_sub")}</p>
+          </div>
+          <div class="pay">
+            <div class="pay-t">${t("how_to_pay")}</div>
+            <div class="pay-b">${t("pay_step_send")}</div>
+            <div class="phone">${payee.phone}</div>
+            <div class="pay-b">${payee.name || ""}</div>
+          </div>
+          <div class="card">
+            <div class="label">${t("pay_paste_sms")}</div>
+            <textarea id="refInput" placeholder="e.g. You have sent K50.00 to ${payee.phone}…"></textarea>
+          </div>
+          <button class="btn btn-alt" type="button" id="payBtn">${t("pay_submit")}</button>
+          <p class="sub" id="status"></p>`;
+
+        const creditBtn = document.getElementById("creditBtn");
+        if (creditBtn) {
+          creditBtn.onclick = async () => {
+            try {
+              await ZE.api(`/boost/${id}`, { method: "POST", body: JSON.stringify({ use_credit: true }) });
+              ZEUI.toast(t("boost_live"), "success");
+              location.href = "/my-shop.html";
+            } catch (err) {
+              ZEUI.error(err.message || "Could not boost.");
+            }
+          };
         }
-      };
-      document.getElementById("requestBtn").onclick = async () => {
-        try {
-          await ZE.api(`/boost/${id}`, { method: "POST", body: JSON.stringify({}) });
-          status.textContent = "Request sent. An admin will review it.";
-          ZEUI.toast("Boost request sent.", "success");
-        } catch (err) {
-          ZEUI.error(err.message || "Could not request boost.");
-        }
-      };
+        document.getElementById("payBtn").onclick = async () => {
+          const ref = document.getElementById("refInput").value.trim();
+          try {
+            await ZE.api(`/boost/${id}`, { method: "POST", body: JSON.stringify({ transaction_ref: ref }) });
+            document.getElementById("status").textContent = t("boost_sent");
+            ZEUI.toast(t("boost_sent"), "success");
+          } catch (err) {
+            ZEUI.error(err.message || "Could not request boost.");
+          }
+        };
+      })();
     }
   </script>
 </body>

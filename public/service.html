@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>ZedEvents - Service</title>
   <meta name="theme-color" content="#C2410C" />
+  <script src="/js/prefs.js"></script>
   <link rel="manifest" href="/manifest.json" />
   <style>
     :root {
@@ -126,11 +127,12 @@
       </div>
       <p class="desc" id="desc"></p>
       <div class="actions">
-        <button type="button" class="primary-btn" id="msgBtn">Message vendor</button>
-        <button type="button" class="ghost-btn" id="shareBtn">Share</button>
-        <button type="button" class="ghost-btn" id="favBtn">Save to favorites</button>
-        <a class="ghost-btn" id="vendorLink" href="#">View vendor profile</a>
-        <button type="button" class="ghost-btn" id="reportBtn">Report this service</button>
+        <button type="button" class="primary-btn" id="msgBtn" data-i18n="message_vendor">Message vendor</button>
+        <button type="button" class="ghost-btn" id="shareBtn" data-i18n="share">Share</button>
+        <button type="button" class="ghost-btn" id="favBtn" data-i18n="save_favorites">Save to favorites</button>
+        <a class="ghost-btn" id="vendorLink" href="#" data-i18n="view_vendor">View vendor profile</a>
+        <button type="button" class="ghost-btn" id="rateBtn">Rate this vendor</button>
+        <button type="button" class="ghost-btn" id="reportBtn" data-i18n="report_service">Report this service</button>
       </div>
     </div>
   </div>
@@ -222,8 +224,19 @@
         const vendorLink = document.getElementById("vendorLink");
         if (itemData.vendor_id) {
           vendorLink.href = `/vendor.html?id=${itemData.vendor_id}`;
+          const rateBtn = document.getElementById("rateBtn");
+          rateBtn.textContent = typeof t === "function" ? t("rate_vendor") : "Rate this vendor";
+          const me = ZEAuth.getUser();
+          if (me && String(me.id) === String(itemData.vendor_id)) rateBtn.hidden = true;
+          else {
+            rateBtn.onclick = () => {
+              if (!ZEAuth.requireLogin(location.pathname + location.search)) return;
+              location.href = `/vendor.html?id=${itemData.vendor_id}&rate=1`;
+            };
+          }
         } else {
           vendorLink.hidden = true;
+          document.getElementById("rateBtn").hidden = true;
         }
 
         document.getElementById("shareBtn").onclick = () => ZEShare.shareService(itemData);

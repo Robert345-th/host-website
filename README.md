@@ -19,9 +19,10 @@ Then open http://localhost:3000 (or set `PORT`).
 ## What’s in this app
 
 - Home feed with search, categories, nearby, boosted services, verified shops, and top vendors
+- Rate a vendor (stars + comment)
 - Save a search to get notified of new matches
 - Service detail: share (WhatsApp / copy), favorites, report, message
 - Vendor profiles: follow, reviews, verified mark
-- My Shop: two-column grid, insights, boost, edit shop name / photo / bio
-- Settings: English / Bemba / Nyanja, following, saved searches, referrals, privacy, terms
+- My Shop: two-column grid, insights, boost (Airtel/MTN K50 or free credit), edit shop name / photo / bio
+- Settings: English / Bemba / Nyanja, dark mode, low-data, following, saved searches, referrals, contact support, test notification, privacy, terms
 - Offline page when the network is down

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Saved searches - ZedEvents</title>
   <meta name="theme-color" content="#C2410C" />
+  <script src="/js/prefs.js"></script>
   <link rel="manifest" href="/manifest.json" />
   <style>
     :root { --bg:#F4F1EC; --card:#fff; --border:#E2E0DC; --text:#211D1A; --sub:#5C5955; --orange:#C2410C; --cream:#FFF3E8; --red:#A3131C; }
@@ -24,12 +25,13 @@
 <body>
   <div class="topbar">
     <button class="back" type="button" onclick="history.back()">←</button>
-    <div class="title">Saved searches</div>
+    <div class="title" data-i18n="saved_searches">Saved searches</div>
   </div>
   <div class="content" id="app"><div class="empty">Loading…</div></div>
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/ui.js"></script>
+  <script src="/js/lang.js"></script>
   <script>
     if (!ZEAuth.requireLogin("/saved-searches.html")) {}
     else {

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>ZedEvents - Settings</title>
   <meta name="theme-color" content="#C2410C" />
+  <script src="/js/prefs.js"></script>
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" type="image/png" href="/icon-192.png" />
   <link rel="apple-touch-icon" href="/icon-192.png" />
@@ -107,7 +108,7 @@
     <button class="back-button" type="button" onclick="history.back()" aria-label="Go back">
       <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <div class="header-title">Settings</div>
+    <div class="header-title" data-i18n="settings">Settings</div>
   </div>
 
   <div class="content">
@@ -123,12 +124,34 @@
       <button class="chip" type="button" id="langNy">Nyanja</button>
     </div>
 
-    <div class="section-label">Quick links</div>
+    <div class="section-label" data-i18n="appearance">Appearance</div>
+    <div class="row" style="cursor:default;">
+      <div style="flex:1;margin-right:10px;">
+        <div class="row-title" data-i18n="dark_mode">Dark mode</div>
+        <div class="row-sub" data-i18n="dark_mode_sub">Dark background, easier at night</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="darkToggle" />
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="row" style="cursor:default;">
+      <div style="flex:1;margin-right:10px;">
+        <div class="row-title" data-i18n="low_data">Low-data mode</div>
+        <div class="row-sub" data-i18n="low_data_sub">Smaller photos so the app uses less data</div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="lowDataToggle" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="section-label" data-i18n="quick_links">Quick links</div>
     <button class="row" type="button" onclick="location.href='/my-shop.html'">
       <div>
         <div class="row-title">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          My Shop
+          <span data-i18n="my_shop">My Shop</span>
         </div>
         <div class="row-sub">Manage your services</div>
       </div>
@@ -137,51 +160,57 @@
       <div>
         <div class="row-title">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Messages
+          <span data-i18n="messages">Messages</span>
         </div>
-        <div class="row-sub">Chats with customers and vendors</div>
+        <div class="row-sub" data-i18n="messages_sub">Chats with customers and vendors</div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/favorites.html'">
       <div>
         <div class="row-title">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-          Favorites
+          <span data-i18n="favorites">Favorites</span>
         </div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/following.html'">
       <div>
-        <div class="row-title">Following</div>
-        <div class="row-sub">Shops you follow</div>
+        <div class="row-title" data-i18n="following_shops">Following</div>
+        <div class="row-sub" data-i18n="following_sub">Shops you follow</div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/saved-searches.html'">
       <div>
-        <div class="row-title">Saved searches</div>
-        <div class="row-sub">Get a ping when something matches</div>
+        <div class="row-title" data-i18n="saved_searches">Saved searches</div>
+        <div class="row-sub" data-i18n="saved_searches_sub">Get a ping when something matches</div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/referrals.html'">
       <div>
-        <div class="row-title">Referrals</div>
-        <div class="row-sub">Your invite code and boost credits</div>
+        <div class="row-title" data-i18n="referrals">Referrals</div>
+        <div class="row-sub" data-i18n="referrals_sub">Your invite code and boost credits</div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/report-user.html'">
       <div>
-        <div class="row-title">Report a user</div>
-        <div class="row-sub">Scam, abuse, or spam</div>
+        <div class="row-title" data-i18n="report_user">Report a user</div>
+        <div class="row-sub" data-i18n="report_user_sub">Scam, abuse, or spam</div>
+      </div>
+    </button>
+    <button class="row" type="button" id="supportRow">
+      <div>
+        <div class="row-title" data-i18n="contact_support">Contact support</div>
+        <div class="row-sub" data-i18n="contact_support_sub">Chat with ZedEvents</div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/privacy-policy.html'">
       <div>
-        <div class="row-title">Privacy policy</div>
+        <div class="row-title" data-i18n="privacy">Privacy policy</div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/terms.html'">
       <div>
-        <div class="row-title">Terms of use</div>
+        <div class="row-title" data-i18n="terms">Terms of use</div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/register-shop.html'">
@@ -203,11 +232,17 @@
       </div>
     </button>
 
-    <div class="section-label">Notifications</div>
+    <div class="section-label" data-i18n="notifications">Notifications</div>
+    <button class="row" type="button" id="pushTestRow">
+      <div>
+        <div class="row-title" data-i18n="push_test">Send a test notification</div>
+        <div class="row-sub" data-i18n="push_test_sub">Check that alerts show on this phone</div>
+      </div>
+    </button>
     <div class="row" style="cursor:default;">
       <div style="flex:1;margin-right:10px;">
-        <div class="row-title">Daily digest</div>
-        <div class="row-sub">Get updates about new services</div>
+        <div class="row-title" data-i18n="daily_digest">Daily digest</div>
+        <div class="row-sub" data-i18n="daily_digest_sub">Get updates about new services</div>
       </div>
       <label class="switch">
         <input type="checkbox" id="digestToggle" checked />
@@ -215,35 +250,35 @@
       </label>
     </div>
 
-    <div class="section-label">Share</div>
+    <div class="section-label" data-i18n="share_section">Share</div>
     <button class="row" type="button" id="settingsInstallRow">
       <div>
         <div class="row-title">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download app
+          <span data-i18n="download_app">Download app</span>
         </div>
-        <div class="row-sub">Install ZedEvents on your home screen</div>
+        <div class="row-sub" data-i18n="download_app_sub">Install ZedEvents on your home screen</div>
       </div>
     </button>
     <button class="row" type="button" id="shareRow">
       <div>
         <div class="row-title">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-          Share ZedEvents
+          <span data-i18n="share_app">Share ZedEvents</span>
         </div>
-        <div class="row-sub">Share the app link with friends</div>
+        <div class="row-sub" data-i18n="share_app_sub">Share the app link with friends</div>
       </div>
     </button>
 
-    <div class="section-label">Account</div>
+    <div class="section-label" data-i18n="account">Account</div>
     <button class="row" type="button" id="deleteRow">
       <div class="row-title danger">
         <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        Delete my account
+        <span data-i18n="delete_account">Delete my account</span>
       </div>
     </button>
     <button class="row" type="button" id="logoutRow">
-      <div class="row-title logout-text">Log out</div>
+      <div class="row-title logout-text" data-i18n="logout">Log out</div>
     </button>
 
     <div class="version-text">ZedEvents</div>
@@ -339,6 +374,43 @@
       document.getElementById("langBem").onclick = () => { setLangAndApply("bem"); paintLang(); };
       document.getElementById("langNy").onclick = () => { setLangAndApply("ny"); paintLang(); };
       paintLang();
+
+      const darkToggle = document.getElementById("darkToggle");
+      const lowDataToggle = document.getElementById("lowDataToggle");
+      if (window.ZEPrefs) {
+        darkToggle.checked = ZEPrefs.isDark();
+        lowDataToggle.checked = ZEPrefs.isLowData();
+        darkToggle.addEventListener("change", () => ZEPrefs.setDark(darkToggle.checked));
+        lowDataToggle.addEventListener("change", () => ZEPrefs.setLowData(lowDataToggle.checked));
+      }
+
+      document.getElementById("supportRow").onclick = async () => {
+        try {
+          const data = await ZE.api("/admin/support-contact");
+          location.href = `/chat.html?userId=${data.id}&support=1`;
+        } catch (err) {
+          ZEUI.error(err.message || "Could not open support.");
+        }
+      };
+
+      document.getElementById("pushTestRow").onclick = async () => {
+        try {
+          if (typeof Notification !== "undefined" && Notification.permission !== "granted") {
+            const perm = await Notification.requestPermission();
+            if (perm !== "granted") {
+              ZEUI.error(t("push_denied"));
+              return;
+            }
+          }
+          const data = await ZE.api("/notifications/test-self", { method: "POST" }).catch(() => ({ sent: 0 }));
+          if (typeof Notification !== "undefined" && Notification.permission === "granted") {
+            new Notification("ZedEvents", { body: t("push_test_local"), icon: "/icon-192.png" });
+          }
+          ZEUI.toast(data.sent ? t("push_test_ok") : t("push_test_local"), "success");
+        } catch (err) {
+          ZEUI.error(err.message || "Could not send test ping.");
+        }
+      };
 
       if (typeof isPwaStandalone === "function" && isPwaStandalone()) {
         document.getElementById("settingsInstallRow").style.display = "none";

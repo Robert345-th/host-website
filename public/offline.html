@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Offline - ZedEvents</title>
+  <script src="/js/prefs.js"></script>
   <meta name="theme-color" content="#C2410C" />
   <style>
     :root { --bg:#F4F1EC; --text:#211D1A; --sub:#5C5955; --orange:#C2410C; }
@@ -23,9 +24,10 @@
 </head>
 <body>
   <div>
-    <h1>You're offline</h1>
-    <p>Turn on mobile data or Wi‑Fi, then try again.</p>
-    <button type="button" onclick="location.href='/'">Try again</button>
+    <h1 data-i18n="offline_title">You're offline</h1>
+    <p data-i18n="offline_body">Turn on mobile data or Wi‑Fi, then try again.</p>
+    <button type="button" onclick="location.href='/'" data-i18n="try_again">Try again</button>
   </div>
+  <script src="/js/lang.js"></script>
 </body>
 </html>
