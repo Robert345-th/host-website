@@ -6,6 +6,8 @@
   <title>ZedEvents - Settings</title>
   <meta name="theme-color" content="#C2410C" />
   <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/png" href="/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
   <style>
     :root {
       --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
@@ -168,6 +170,15 @@
     </div>
 
     <div class="section-label">Share</div>
+    <button class="row" type="button" id="settingsInstallRow">
+      <div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download app
+        </div>
+        <div class="row-sub">Install ZedEvents on your home screen</div>
+      </div>
+    </button>
     <button class="row" type="button" id="shareRow">
       <div>
         <div class="row-title">
@@ -218,6 +229,7 @@
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/ui.js"></script>
+  <script src="/js/pwa-install.js"></script>
   <script>
     if (!ZEAuth.requireLogin("/settings.html")) {
       /* redirected */
@@ -269,6 +281,10 @@
           ZEUI.error(err.message || "Could not delete account.");
         }
       };
+
+      if (typeof isPwaStandalone === "function" && isPwaStandalone()) {
+        document.getElementById("settingsInstallRow").style.display = "none";
+      }
 
       document.getElementById("shareRow").onclick = async () => {
         const url = location.origin + "/";

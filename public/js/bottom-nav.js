@@ -3,6 +3,7 @@
   const ICONS = {
     home: '<path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/>',
     shop: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+    install: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
   };
   const ITEMS = [
     { key: "home", href: "/", label: "Home" },
@@ -23,6 +24,7 @@
       .bottom-nav .nav-item {
         flex: 1; text-align: center; text-decoration: none; color: #9a9490;
         font-size: 10px; font-weight: 600; padding: 4px 2px; min-width: 0;
+        background: none; border: none; cursor: pointer; font-family: inherit;
       }
       .bottom-nav .nav-item.active { color: #F5C518; }
       .bottom-nav .nav-icon {
@@ -34,6 +36,39 @@
       }
     `;
     document.head.appendChild(style);
+  }
+
+  function shouldShowInstallNav() {
+    if (typeof window.isPwaStandalone === "function" && window.isPwaStandalone()) return false;
+    return true;
+  }
+
+  function installNavLabel() {
+    if (/Android/i.test(navigator.userAgent)) return "Download";
+    return "Install";
+  }
+
+  function renderInstallNavItem() {
+    if (!shouldShowInstallNav()) return "";
+    const label = installNavLabel();
+    return `
+      <button type="button" class="nav-item" id="navInstallBtn">
+        <div class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.install}</svg></div>
+        <div>${label}</div>
+      </button>`;
+  }
+
+  function wireInstallNavButton() {
+    const btn = document.getElementById("navInstallBtn");
+    if (!btn || btn.dataset.wired === "1") return;
+    btn.dataset.wired = "1";
+    btn.addEventListener("click", () => {
+      if (typeof window.promptPwaInstall === "function") {
+        window.promptPwaInstall();
+        return;
+      }
+      window.location.href = "/install.html";
+    });
   }
 
   function renderBottomNav(active) {
@@ -55,7 +90,7 @@
           <div class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[item.key]}</svg></div>
           <div>${item.label}</div>
         </a>`;
-    }).join("");
+    }).join("") + renderInstallNavItem();
 
     mount.querySelectorAll("[data-require-login]").forEach((link) => {
       link.addEventListener("click", (e) => {
@@ -64,6 +99,7 @@
         }
       });
     });
+    wireInstallNavButton();
   }
 
   window.renderBottomNav = renderBottomNav;
@@ -77,4 +113,7 @@
   } else {
     boot();
   }
+
+  window.addEventListener("pwa-install-ready", boot);
+  window.addEventListener("appinstalled", boot);
 })();

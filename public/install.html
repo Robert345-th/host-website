@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Install ZedEvents</title>
+  <meta name="theme-color" content="#C2410C" />
+  <meta name="description" content="Install ZedEvents on your phone — find catering, DJs, tents and more in Zambia." />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/png" href="/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="ZedEvents" />
+  <style>
+    :root {
+      --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
+      --text: #211D1A; --subtext: #5C5955; --orange: #C2410C; --cream: #FFF3E8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; padding: 24px 18px calc(24px + env(safe-area-inset-bottom));
+    }
+    .wrap { max-width: 480px; margin: 0 auto; }
+    .hero { text-align: center; margin-bottom: 24px; }
+    .hero img { width: 72px; height: 72px; border-radius: 18px; margin-bottom: 12px; }
+    .hero h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+    .hero p { font-size: 14px; color: var(--subtext); line-height: 1.5; }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 18px; margin-bottom: 14px;
+    }
+    .step { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+    .step:last-of-type { margin-bottom: 0; }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 8px; background: var(--orange); color: #fff;
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0;
+    }
+    .step-text { font-size: 14px; line-height: 1.5; padding-top: 3px; }
+    .btn {
+      width: 100%; border: none; border-radius: 12px; padding: 14px;
+      font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 16px;
+    }
+    .btn-primary { background: var(--orange); color: #fff; }
+    .link-row { text-align: center; margin-top: 16px; }
+    .link-row a { color: var(--orange); font-size: 13px; font-weight: 600; text-decoration: none; }
+    #browserBox { display: none; }
+  </style>
+</head>
+<body>
+  <script>
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      window.location.replace("/");
+    }
+  </script>
+  <div class="wrap">
+    <div class="hero">
+      <img src="/icon-192.png" alt="ZedEvents" />
+      <h1>Get ZedEvents on your phone</h1>
+      <p>Install the app on your home screen. No Play Store needed.</p>
+    </div>
+
+    <div id="embeddedBox">
+      <div class="card">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">Tap <strong>Copy link</strong> below</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">Open the <strong>Chrome</strong> app</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">Paste the link, then tap <strong>Download</strong></div>
+        </div>
+        <button class="btn btn-primary" id="copyLinkBtn" type="button">Copy link</button>
+      </div>
+    </div>
+
+    <div id="browserBox">
+      <div class="card">
+        <p style="font-size:14px;line-height:1.5;margin-bottom:4px;">You're in a browser that can install ZedEvents.</p>
+        <button class="btn btn-primary" id="installBtn" type="button">Download app</button>
+      </div>
+    </div>
+
+    <div class="link-row">
+      <a href="/">Just browse the website →</a>
+    </div>
+  </div>
+
+  <script src="/js/pwa-install.js"></script>
+  <script>
+    let installPromptReady = false;
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      installPromptReady = true;
+      refreshLayout();
+    });
+
+    function refreshLayout() {
+      const ready = installPromptReady || (typeof isPwaStandalone === "function" && isPwaStandalone());
+      document.getElementById("embeddedBox").style.display = ready ? "none" : "block";
+      document.getElementById("browserBox").style.display = ready ? "block" : "none";
+    }
+
+    document.getElementById("copyLinkBtn").addEventListener("click", async () => {
+      const url = location.origin + "/install.html";
+      try {
+        await navigator.clipboard.writeText(url);
+        alert("Link copied. Open Chrome and paste it in the address bar.");
+      } catch {
+        prompt("Copy this link and paste it in Chrome:", url);
+      }
+    });
+
+    initPwaInstall({ buttonIds: ["installBtn"], showBanner: false });
+    refreshLayout();
+  </script>
+</body>
+</html>

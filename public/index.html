@@ -7,6 +7,11 @@
   <meta name="theme-color" content="#C2410C" />
   <meta name="description" content="Find event services in Zambia — catering, DJs, tents, décor and more." />
   <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/png" href="/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="ZedEvents" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <style>
     :root {
       --bg: #F4F1EC;
@@ -134,7 +139,7 @@
     .status { text-align: center; padding: 60px 20px; color: var(--subtext); }
   </style>
 </head>
-<body data-nav-active="home">
+<body data-nav-active="home" data-pwa-banner="1">
   <div class="sticky-header">
     <div class="topbar">
       <div class="topbar-left">
@@ -184,6 +189,7 @@
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/location.js"></script>
+  <script src="/js/pwa-install.js"></script>
   <script src="/js/bottom-nav.js"></script>
   <script>
     const grid = document.getElementById("grid");
