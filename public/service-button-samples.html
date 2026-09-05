@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Pick a service page layout</title>
+  <meta name="theme-color" content="#C2410C" />
+  <style>
+    :root {
+      --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
+      --text: #211D1A; --subtext: #5C5955; --orange: #C2410C;
+      --cream: #FFF3E8; --peach: #FFD8B8; --black: #111; --gold: #F5C518;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      padding-bottom: 96px;
+    }
+    button, a { font: inherit; }
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--orange); padding: 16px;
+    }
+    .header-title { color: var(--cream); font-size: 18px; font-weight: 700; }
+    .header-sub { color: var(--peach); font-size: 12px; margin-top: 2px; }
+    .intro {
+      padding: 14px 16px 4px; font-size: 14px; color: var(--subtext); line-height: 1.45;
+    }
+    .option {
+      display: block; width: calc(100% - 24px); margin: 12px 12px 0;
+      text-align: left; background: transparent; border: 2px solid var(--border);
+      border-radius: 16px; padding: 10px; cursor: pointer; color: inherit;
+    }
+    .option.picked { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(194,65,12,0.18); }
+    .option-kicker {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--orange); margin: 2px 4px 8px;
+    }
+    .option-note { font-size: 12px; color: var(--subtext); margin: 8px 4px 4px; line-height: 1.4; }
+    .phone {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    }
+    .ph-bar {
+      background: var(--orange); padding: 10px 12px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .ph-bar strong { color: var(--cream); font-size: 14px; }
+    .ph-bar small { color: var(--peach); display: block; font-size: 10px; }
+    .ph-acc {
+      border: 1.5px solid rgba(255,255,255,0.35); color: #fff;
+      border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 700;
+    }
+    .photo {
+      height: 92px; margin: 8px 8px 6px; border-radius: 10px;
+      background: linear-gradient(160deg, #d7e8d2, #3f6b4a);
+    }
+    .thumbs { display: flex; gap: 6px; padding: 0 8px 8px; }
+    .thumbs span {
+      width: 36px; height: 36px; border-radius: 7px; background: #c5d4bf; display: block;
+    }
+    .thumbs span:first-child { outline: 2px solid var(--orange); }
+    .panel { background: #fff; margin: 0 8px 8px; border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+    .cat { font-size: 10px; font-weight: 700; color: var(--orange); letter-spacing: 0.03em; text-transform: uppercase; }
+    .svc { font-size: 16px; font-weight: 700; margin: 3px 0 4px; }
+    .who { font-size: 12px; color: var(--subtext); }
+    .price { font-size: 16px; font-weight: 700; color: var(--orange); margin: 6px 0 4px; }
+    .loc { font-size: 12px; color: var(--subtext); }
+    .desc { font-size: 12px; line-height: 1.4; margin-top: 6px; }
+    .stack { display: flex; flex-direction: column; gap: 7px; margin-top: 12px; }
+    .row { display: flex; gap: 7px; margin-top: 12px; }
+    .row + .row { margin-top: 7px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 12px; }
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; border: none; border-radius: 10px; padding: 11px 8px;
+      font-size: 13px; font-weight: 700; background: #eee; color: var(--text);
+    }
+    .btn.orange { background: var(--orange); color: #fff; }
+    .btn.ghost { background: #fff; border: 1.5px solid #111; }
+    .btn.sq { border-radius: 0; text-transform: uppercase; letter-spacing: 0.04em; font-size: 12px; }
+    .btn.sq.orange { background: var(--black); color: var(--gold); }
+    .btn.sq.ghost { background: #fff; border: 2px solid #111; }
+    .btn.sm { padding: 9px 6px; font-size: 12px; }
+    .icons {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px;
+    }
+    .icon-act {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 8px 4px;
+      font-size: 10px; font-weight: 700; color: var(--text);
+    }
+    .icon-act svg, .btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .text-links {
+      display: flex; justify-content: center; gap: 14px; margin-top: 10px;
+      font-size: 11px; font-weight: 700; color: var(--subtext);
+    }
+    .vendor-chip {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 10px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px;
+      font-size: 12px; font-weight: 700;
+    }
+    .vendor-chip span { font-size: 11px; color: var(--orange); }
+    .sticky {
+      display: flex; gap: 8px; padding: 8px;
+      background: #fff; border-top: 1px solid var(--border);
+    }
+    .more-peek {
+      margin-top: 8px; background: #f7f5f1; border: 1px dashed var(--border); border-radius: 10px; padding: 8px;
+    }
+    .more-peek div { font-size: 11px; font-weight: 700; padding: 7px 4px; border-bottom: 1px solid var(--border); }
+    .more-peek div:last-child { border-bottom: none; color: #a33; }
+    .pick-bar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+      background: #fff; border-top: 1px solid var(--border);
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+    .pick-bar strong { font-size: 14px; }
+    .pick-bar span { font-size: 12px; color: var(--subtext); }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="header-title">Service page buttons</div>
+    <div class="header-sub">Tap a layout. Then tell me the letter.</div>
+  </div>
+  <p class="intro">Same listing, six ways to place Message, Book, Share, Save, shop, Rate, and Report. Live pages stay as they are until you pick.</p>
+
+  <button class="option" type="button" data-pick="A">
+    <div class="option-kicker">A · Two big buttons, then icons</div>
+    <div class="phone">
+      <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
+      <div class="photo"></div>
+      <div class="thumbs"><span></span><span></span><span></span></div>
+      <div class="panel">
+        <div class="cat">Tents &amp; chairs</div>
+        <div class="svc">White party tent, 100 guests</div>
+        <div class="who">Banda Tents &amp; Chairs</div>
+        <div class="price">K4,500</div>
+        <div class="loc">Kitwe</div>
+        <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
+        <div class="row">
+          <div class="btn orange">Message</div>
+          <div class="btn ghost">Book this</div>
+        </div>
+        <div class="icons">
+          <div class="icon-act"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Share</div>
+          <div class="icon-act"><svg viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.3l8.8-8.6a5 5 0 0 0 0-7.1z"/></svg>Save</div>
+          <div class="icon-act"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-8h6v8"/></svg>Shop</div>
+          <div class="icon-act"><svg viewBox="0 0 24 24"><polygon points="12 3 15 9 21.5 9.8 16.8 14.2 18.2 21 12 17.6 5.8 21 7.2 14.2 2.5 9.8 9 9"/></svg>Rate</div>
+        </div>
+        <div class="text-links"><span>Report this service</span></div>
+      </div>
+    </div>
+    <p class="option-note">Message and Book sit together. Share, Save, Shop, and Rate are icons. Report stays a small link.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="B">
+    <div class="option-kicker">B · Sticky bar at the bottom</div>
+    <div class="phone">
+      <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
+      <div class="photo"></div>
+      <div class="thumbs"><span></span><span></span><span></span></div>
+      <div class="panel">
+        <div class="cat">Tents &amp; chairs</div>
+        <div class="svc">White party tent, 100 guests</div>
+        <div class="who">Banda Tents &amp; Chairs</div>
+        <div class="price">K4,500</div>
+        <div class="loc">Kitwe</div>
+        <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
+        <div class="vendor-chip">Banda Tents &amp; Chairs <span>View shop</span></div>
+        <div class="icons">
+          <div class="icon-act"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Share</div>
+          <div class="icon-act"><svg viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.3l8.8-8.6a5 5 0 0 0 0-7.1z"/></svg>Save</div>
+          <div class="icon-act"><svg viewBox="0 0 24 24"><polygon points="12 3 15 9 21.5 9.8 16.8 14.2 18.2 21 12 17.6 5.8 21 7.2 14.2 2.5 9.8 9 9"/></svg>Rate</div>
+          <div class="icon-act"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V4s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>Report</div>
+        </div>
+      </div>
+      <div class="sticky">
+        <div class="btn ghost">Book this</div>
+        <div class="btn orange">Message</div>
+      </div>
+    </div>
+    <p class="option-note">Book and Message stay on screen while you scroll. The extra actions sit as icons above.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="C">
+    <div class="option-kicker">C · Two-column grid</div>
+    <div class="phone">
+      <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
+      <div class="photo"></div>
+      <div class="thumbs"><span></span><span></span><span></span></div>
+      <div class="panel">
+        <div class="cat">Tents &amp; chairs</div>
+        <div class="svc">White party tent, 100 guests</div>
+        <div class="who">Banda Tents &amp; Chairs</div>
+        <div class="price">K4,500</div>
+        <div class="loc">Kitwe</div>
+        <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
+        <div class="stack" style="margin-bottom:7px;">
+          <div class="btn orange">Message vendor</div>
+        </div>
+        <div class="grid2">
+          <div class="btn ghost sm">Book this</div>
+          <div class="btn ghost sm">Share</div>
+          <div class="btn ghost sm">Save</div>
+          <div class="btn ghost sm">View shop</div>
+          <div class="btn ghost sm">Rate</div>
+          <div class="btn ghost sm">Report</div>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">One full-width Message, then the rest in pairs. Shorter than a single stack, still all visible.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="D">
+    <div class="option-kicker">D · Two buttons, rest in More</div>
+    <div class="phone">
+      <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
+      <div class="photo"></div>
+      <div class="thumbs"><span></span><span></span><span></span></div>
+      <div class="panel">
+        <div class="cat">Tents &amp; chairs</div>
+        <div class="svc">White party tent, 100 guests</div>
+        <div class="who">Banda Tents &amp; Chairs</div>
+        <div class="price">K4,500</div>
+        <div class="loc">Kitwe</div>
+        <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
+        <div class="stack">
+          <div class="btn orange">Message vendor</div>
+          <div class="btn ghost">Book this</div>
+          <div class="btn ghost">More</div>
+        </div>
+        <div class="more-peek">
+          <div>Share</div>
+          <div>Save to favorites</div>
+          <div>View vendor profile</div>
+          <div>Rate this vendor</div>
+          <div>Report this service</div>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">The page only shows Message, Book, and More. Share, Save, shop, Rate, and Report open from More.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="E">
+    <div class="option-kicker">E · Square black and gold</div>
+    <div class="phone">
+      <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
+      <div class="photo"></div>
+      <div class="thumbs"><span></span><span></span><span></span></div>
+      <div class="panel">
+        <div class="cat">Tents &amp; chairs</div>
+        <div class="svc">White party tent, 100 guests</div>
+        <div class="who">Banda Tents &amp; Chairs</div>
+        <div class="price">K4,500</div>
+        <div class="loc">Kitwe</div>
+        <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
+        <div class="stack">
+          <div class="btn sq orange">Message vendor</div>
+          <div class="btn sq ghost">Book this</div>
+        </div>
+        <div class="text-links">
+          <span>Share</span>
+          <span>Save</span>
+          <span>Shop</span>
+        </div>
+        <div class="text-links">
+          <span>Rate</span>
+          <span>Report</span>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">Same square style as login and settings. Only two real buttons. Everything else is a text link.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="F">
+    <div class="option-kicker">F · One button, four icons</div>
+    <div class="phone">
+      <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
+      <div class="photo"></div>
+      <div class="thumbs"><span></span><span></span><span></span></div>
+      <div class="panel">
+        <div class="cat">Tents &amp; chairs</div>
+        <div class="svc">White party tent, 100 guests</div>
+        <div class="who">Banda Tents &amp; Chairs</div>
+        <div class="price">K4,500</div>
+        <div class="loc">Kitwe</div>
+        <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
+        <div class="stack">
+          <div class="btn orange">Message vendor</div>
+        </div>
+        <div class="icons">
+          <div class="icon-act"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>Book</div>
+          <div class="icon-act"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Share</div>
+          <div class="icon-act"><svg viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.3l8.8-8.6a5 5 0 0 0 0-7.1z"/></svg>Save</div>
+          <div class="icon-act"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-8h6v8"/></svg>Shop</div>
+        </div>
+        <div class="text-links"><span>Rate this vendor</span><span>Report</span></div>
+      </div>
+    </div>
+    <p class="option-note">One main action: Message. Book sits with Share, Save, and Shop as icons.</p>
+  </button>
+
+  <div class="pick-bar">
+    <strong id="picked">No pick yet</strong>
+    <div><span>Reply with A, B, C, D, E, or F.</span></div>
+  </div>
+  <script>
+    const picked = document.getElementById("picked");
+    document.querySelectorAll(".option").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".option").forEach((el) => el.classList.remove("picked"));
+        btn.classList.add("picked");
+        picked.textContent = "You picked " + btn.dataset.pick;
+      });
+    });
+  </script>
+</body>
+</html>
