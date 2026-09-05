@@ -22,21 +22,22 @@
       --gold: #F5C518; --price-red: #B42318; --thumb-bg: #E9E2D3; --red-btn: #E01B27;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      overflow-x: hidden;
-      overscroll-behavior-x: none;
-    }
+    html, body { height: 100%; overflow: hidden; }
     body {
       font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
       background: var(--bg); color: var(--text);
-      padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
-      overflow-x: hidden;
+      display: flex; flex-direction: column;
+      height: 100dvh; min-height: 100vh;
+      overflow: hidden;
+      overscroll-behavior: none;
     }
+    [hidden] { display: none !important; }
     a { color: inherit; text-decoration: none; }
     button { font: inherit; cursor: pointer; }
 
     .topbar {
-      position: sticky; top: 0; z-index: 50;
+      flex-shrink: 0;
+      position: relative; z-index: 50;
       background: #fff;
       padding: 8px 12px;
       padding-top: max(8px, env(safe-area-inset-top, 0px));
@@ -63,18 +64,22 @@
       padding: 8px 4px; color: var(--text); font-size: 14px; font-weight: 700;
     }
 
-    .center-box { padding: 60px 24px; text-align: center; color: var(--subtext); }
+    .center-box { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; color: var(--subtext); }
+    #detail {
+      flex: 1; min-height: 0; overflow: hidden;
+      flex-direction: column;
+    }
+    #detail:not([hidden]) { display: flex; }
 
     .hero-wrap {
       position: relative;
-      width: 100%;
+      flex: 0 0 min(56dvh, 420px);
       height: min(56dvh, 420px);
       min-height: 280px;
       max-height: 420px;
       overflow: hidden;
       background: var(--thumb-bg);
       cursor: pointer;
-      touch-action: pan-y;
     }
     .media-main { position: absolute; inset: 0; }
     .media-main img {
@@ -111,9 +116,9 @@
     }
     .boost-chip[hidden] { display: none; }
     .thumb-row {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      padding: 10px 12px 0; width: 100%; max-width: 100%;
-      overflow: hidden; touch-action: pan-y;
+      position: absolute; bottom: 96px; left: 0; right: 0; z-index: 8;
+      display: flex; gap: 8px; overflow-x: auto; padding: 0 10px;
+      -webkit-overflow-scrolling: touch;
     }
     .thumb-row[hidden] { display: none; }
     .thumb-box {
@@ -143,8 +148,17 @@
       stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
     }
 
-    .body-pad { padding: 14px 16px 8px; max-width: 640px; margin: 0 auto; min-width: 0; overflow-x: hidden; }
-    #detail { max-width: 100%; overflow-x: hidden; }
+    .listing-bottom {
+      flex: 1 1 0%; min-height: 0; overflow: hidden;
+      display: flex; flex-direction: column; background: var(--bg);
+      position: relative; z-index: 5;
+    }
+    .body-scroll {
+      flex: 1 1 auto; min-height: 0; overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 14px 16px 8px;
+      padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    }
     .seller-row {
       display: flex; align-items: center; gap: 10px;
       width: 100%; background: none; border: none; padding: 0;
@@ -166,7 +180,7 @@
     .seller-sub { font-size: 12px; color: var(--subtext); margin-top: 2px; }
     .desc-card {
       background: var(--card); border: 1.5px solid var(--text);
-      border-radius: 12px; padding: 14px;
+      border-radius: 12px; padding: 14px; margin-bottom: 12px;
     }
     .desc-label {
       font-size: 12px; font-weight: 800; text-transform: uppercase;
@@ -292,13 +306,13 @@
       font-size: 12px; font-weight: 800; text-transform: uppercase;
       margin: 4px 0 10px;
     }
-    .similar-wrap { max-width: 100%; min-width: 0; overflow: hidden; }
+    .similar-wrap { max-width: 100%; min-width: 0; }
     .similar-row {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px; overflow: hidden; max-width: 100%;
+      display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
     }
-    .similar-card { width: auto; min-width: 0; cursor: pointer; background: none; border: none; padding: 0; text-align: left; color: inherit; }
-    .similar-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 10px; display: block; background: var(--border); }
+    .similar-card { width: 120px; flex-shrink: 0; cursor: pointer; background: none; border: none; padding: 0; text-align: left; color: inherit; }
+    .similar-card img { width: 120px; height: 90px; object-fit: cover; border-radius: 10px; display: block; background: var(--border); }
     .similar-card .p { font-size: 12px; font-weight: 800; margin-top: 4px; }
     .similar-card .n { font-size: 11px; color: var(--subtext); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -390,15 +404,15 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
       </button>
       <div class="boost-chip" id="boostChip" hidden data-i18n="boosted">Boosted</div>
+      <div class="thumb-row" id="mediaThumbs" hidden></div>
       <div class="photo-price">
         <div class="price" id="price">—</div>
         <div class="item-title" id="title">—</div>
         <div class="photo-meta" id="photoMeta"></div>
       </div>
     </div>
-    <div class="thumb-row" id="mediaThumbs" hidden></div>
-
-    <div class="body-pad">
+    <div class="listing-bottom">
+      <div class="body-scroll">
       <div class="seller-card" id="sellerCard">
         <button class="seller-summary" type="button" id="sellerToggle">
           <div class="seller-avatar" id="sellerAvatar">V</div>
@@ -436,6 +450,7 @@
       <div class="similar-wrap" id="similarWrap" hidden>
         <div class="similar-head" data-i18n="similar_services">Similar services</div>
         <div class="similar-row" id="similarRow"></div>
+      </div>
       </div>
     </div>
   </div>
@@ -641,7 +656,8 @@
               </button>`
             ).join("");
             thumbs.querySelectorAll(".thumb-box").forEach((btn) => {
-              btn.onclick = () => {
+              btn.onclick = (e) => {
+                e.stopPropagation();
                 photoIndex = Number(btn.dataset.i);
                 thumbs.querySelectorAll(".thumb-box").forEach((el) => el.classList.remove("active"));
                 btn.classList.add("active");
@@ -953,7 +969,7 @@
     });
     hero.addEventListener("click", (e) => {
       if (viewerOverlay.classList.contains("open")) return;
-      if (e.target.closest(".more-button, .round-btn, .boost-chip")) return;
+      if (e.target.closest(".more-button, .round-btn, .boost-chip, .thumb-row, .thumb-box")) return;
       if (tapMoved) return;
       openViewer(photoIndex);
     });
