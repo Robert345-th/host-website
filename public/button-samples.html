@@ -5,201 +5,231 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Button samples</title>
   <style>
+    :root {
+      --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
+      --text: #211D1A; --subtext: #5C5955; --black: #111111;
+      --gold: #F5C518; --red-btn: #E01B27;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
-      background: #F4F1EC; color: #211D1A;
+      background: var(--bg); color: var(--text);
       padding: 16px 16px 96px;
     }
-    h1 { font-size: 18px; margin-bottom: 6px; }
-    .lead { font-size: 14px; color: #5C5955; line-height: 1.45; margin-bottom: 16px; }
+    h1 { font-size: 18px; font-weight: 800; }
+    .lead { font-size: 14px; color: var(--subtext); line-height: 1.45; margin: 6px 0 16px; }
     .sample {
-      background: #fff; border: 2px solid #E2E0DC; border-radius: 14px;
-      padding: 14px; margin-bottom: 12px; cursor: pointer; text-align: left;
-      width: 100%; color: inherit;
+      display: block; width: 100%; text-align: left; color: inherit;
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: 14px; padding: 14px; margin-bottom: 14px; cursor: pointer;
     }
-    .sample.picked { border-color: #211D1A; }
+    .sample.picked { border-color: var(--black); }
     .kicker {
       font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
-      text-transform: uppercase; margin-bottom: 12px;
+      text-transform: uppercase; margin-bottom: 10px;
     }
-    .stack { display: flex; flex-direction: column; gap: 8px; }
-    .primary {
-      width: 100%; border: none; border-radius: 12px;
-      padding: 14px; font-size: 15px; font-weight: 700;
+    .note { font-size: 12px; color: var(--subtext); margin-top: 10px; line-height: 1.4; }
+
+    .deal-row { display: flex; gap: 10px; }
+    .deal-btn {
+      flex: 1; background: var(--black); color: var(--gold); border: none;
+      border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 800;
     }
-    .ghost {
-      width: 100%; border-radius: 8px; padding: 12px;
-      font-size: 14px; font-weight: 600; background: #F3F3F3;
+    .notify-btn {
+      flex: 1; background: var(--card); border: 1.5px solid var(--text); color: var(--text);
+      border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 800;
     }
-    .link {
-      display: block; text-align: center; padding: 10px;
-      font-size: 14px; font-weight: 600; text-decoration: underline;
+    .seller-actions { display: flex; gap: 12px; margin-top: 10px; }
+    .view-shop-btn, .review-btn {
+      flex: 1; background: var(--black); color: var(--gold); padding: 11px 12px;
+      border-radius: 12px; font-size: 12px; font-weight: 800; border: none;
     }
+    .review-btn { background: var(--card); color: var(--text); border: 1.5px solid var(--text); }
+
+    .fixed-cta-row {
+      display: flex; gap: 10px; margin-top: 12px;
+      padding: 10px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+    }
+    .cta-btn {
+      flex: 1; height: 48px; padding: 0; border-radius: 999px; background: #fff;
+      border: 1px solid #D9D6D0; display: flex; align-items: center; justify-content: center;
+    }
+    .cta-btn svg { width: 22px; height: 22px; }
+    .msg-btn {
+      background: linear-gradient(180deg, #FF3B4A 0%, #E01B27 52%, #C41520 100%);
+      border-color: transparent;
+    }
+    .msg-btn svg { fill: #fff; stroke: none; }
+    .wa-btn svg { fill: #25D366; }
+    .sms-btn {
+      background: linear-gradient(180deg, #4AE05C 0%, #2BC93D 52%, #22B934 100%);
+      border-color: transparent;
+    }
+    .sms-btn svg { fill: #fff; stroke: none; }
+    .call-btn svg { fill: none; stroke: var(--red-btn); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .book-btn {
+      background: linear-gradient(180deg, #F7D44A 0%, #F5C518 52%, #D4A90E 100%);
+      border-color: transparent;
+    }
+    .book-btn svg { fill: none; stroke: #111; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .save-btn svg { fill: none; stroke: var(--red-btn); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .share-btn svg { fill: none; stroke: #211D1A; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .cta-lab {
+      display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1;
+      font-size: 10px; font-weight: 700; color: var(--subtext);
+    }
+    .cta-lab .cta-btn { width: 100%; }
+
+    .blue-msg { background: linear-gradient(180deg, #3B82F6 0%, #1D4ED8 52%, #1E40AF 100%); border-color: transparent; }
+    .blue-msg svg { fill: #fff; stroke: none; }
+    .teal-book {
+      background: linear-gradient(180deg, #2DD4BF 0%, #0F766E 52%, #115E59 100%);
+      border-color: transparent;
+    }
+    .teal-book svg { fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .gold-msg { background: var(--black); border-color: transparent; }
+    .gold-msg svg { fill: var(--gold); stroke: none; }
+    .purple-save {
+      background: linear-gradient(180deg, #A78BFA 0%, #6D28D9 52%, #5B21B6 100%);
+      border-color: transparent;
+    }
+    .purple-save svg { fill: #fff; stroke: none; }
+
     .pick-bar {
-      position: fixed; left: 0; right: 0; bottom: 0;
-      background: #fff; border-top: 1px solid #E2E0DC;
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+      background: #fff; border-top: 1px solid var(--border);
       padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
     }
     .pick-bar strong { font-size: 14px; }
-    .pick-bar span { font-size: 12px; color: #5C5955; }
-
-    .a .kicker { color: #C2410C; }
-    .a .primary { background: #C2410C; color: #fff; }
-    .a .ghost { border: 1.5px solid #211D1A; color: #211D1A; background: #F3F3F3; }
-    .a .link { color: #211D1A; }
-
-    .b .kicker { color: #1D4ED8; }
-    .b .primary { background: #1D4ED8; color: #fff; }
-    .b .ghost { border: 1.5px solid #1D4ED8; color: #1D4ED8; background: #EEF3FF; }
-    .b .link { color: #1D4ED8; }
-
-    .c .kicker { color: #157A3A; }
-    .c .primary { background: #157A3A; color: #fff; }
-    .c .ghost { border: 1.5px solid #157A3A; color: #157A3A; background: #F1F8F3; }
-    .c .link { color: #157A3A; }
-
-    .d .kicker { color: #111; }
-    .d .primary { background: #111; color: #F5C518; border-radius: 0; text-transform: uppercase; letter-spacing: 0.04em; }
-    .d .ghost { border: 2px solid #111; color: #111; background: #fff; border-radius: 0; text-transform: uppercase; letter-spacing: 0.03em; font-size: 12px; }
-    .d .link { color: #8A6D00; }
-
-    .e .kicker { color: #7C4A1E; }
-    .e .primary { background: #7C4A1E; color: #FFF3E8; }
-    .e .ghost { border: 1.5px solid #7C4A1E; color: #7C4A1E; background: #FFF3E8; }
-    .e .link { color: #7C4A1E; }
-
-    .f .kicker { color: #0F766E; }
-    .f .primary { background: #0F766E; color: #fff; }
-    .f .ghost { border: 1.5px solid #0F766E; color: #0F766E; background: #EEF7F6; }
-    .f .link { color: #0F766E; }
-
-    .g .kicker { color: #6D28D9; }
-    .g .primary { background: #6D28D9; color: #fff; }
-    .g .ghost { border: 1.5px solid #6D28D9; color: #6D28D9; background: #F5F0FF; }
-    .g .link { color: #6D28D9; }
-
-    .h .kicker { color: #211D1A; }
-    .h .primary { background: #1D4ED8; color: #fff; }
-    .h .ghost.book { background: #157A3A; color: #fff; border: none; }
-    .h .ghost.share { background: #0F766E; color: #fff; border: none; }
-    .h .ghost.save { background: #7C4A1E; color: #fff; border: none; }
-    .h .ghost.rate { background: #6D28D9; color: #fff; border: none; }
-    .h .ghost.report { background: #111; color: #F5C518; border: none; }
-    .h .link { color: #C2410C; }
+    .pick-bar span { font-size: 12px; color: var(--subtext); }
   </style>
 </head>
 <body>
   <h1>Button samples</h1>
-  <p class="lead">Same buttons as the service page. Nothing on the live listing is changed. Tap a set, then reply with the letter.</p>
+  <p class="lead">Copied from the ZedMarket listing page: round icon bar at the bottom, each action a different color. Same actions as the service page. Live listings are not changed.</p>
 
-  <button class="sample a" type="button" data-pick="A">
-    <div class="kicker">A · Now · orange</div>
-    <div class="stack">
-      <div class="primary">Message vendor</div>
-      <div class="ghost">Book this</div>
-      <div class="ghost">Share</div>
-      <div class="ghost">Save to favorites</div>
-      <div class="link">View vendor profile</div>
-      <div class="ghost">Rate this vendor</div>
-      <div class="ghost">Report this service</div>
+  <button class="sample" type="button" data-pick="A">
+    <div class="kicker">A · ZedMarket listing, as written</div>
+    <div class="deal-row">
+      <div class="deal-btn">Book this</div>
+      <div class="notify-btn">Save to favorites</div>
     </div>
+    <div class="seller-actions">
+      <div class="view-shop-btn">View shop</div>
+      <div class="review-btn">Rate vendor</div>
+    </div>
+    <div class="fixed-cta-row">
+      <div class="cta-btn msg-btn" title="Message">
+        <svg viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 6.92 2 11.75c0 2.48 1.22 4.72 3.2 6.28-.2 1.55-1.02 3.12-2.45 4.22 2.12-.18 3.86-1.1 5.02-1.92 1.3.37 2.72.57 4.23.57 5.52 0 10-3.92 10-8.75S17.52 3 12 3z"/></svg>
+      </div>
+      <div class="cta-btn wa-btn" title="Share">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </div>
+      <div class="cta-btn sms-btn" title="Book">
+        <svg viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 6.92 2 11.75c0 2.48 1.22 4.72 3.2 6.28-.2 1.55-1.02 3.12-2.45 4.22 2.12-.18 3.86-1.1 5.02-1.92 1.3.37 2.72.57 4.23.57 5.52 0 10-3.92 10-8.75S17.52 3 12 3z"/></svg>
+      </div>
+      <div class="cta-btn call-btn" title="Save">
+        <svg viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.3l8.8-8.6a5 5 0 0 0 0-7.1z"/></svg>
+      </div>
+    </div>
+    <p class="note">Red message, white WhatsApp, green SMS, white heart. Same as listing.html.</p>
   </button>
 
-  <button class="sample b" type="button" data-pick="B">
-    <div class="kicker">B · Blue</div>
-    <div class="stack">
-      <div class="primary">Message vendor</div>
-      <div class="ghost">Book this</div>
-      <div class="ghost">Share</div>
-      <div class="ghost">Save to favorites</div>
-      <div class="link">View vendor profile</div>
-      <div class="ghost">Rate this vendor</div>
-      <div class="ghost">Report this service</div>
+  <button class="sample" type="button" data-pick="B">
+    <div class="kicker">B · Same bar, labels under</div>
+    <div class="fixed-cta-row">
+      <div class="cta-lab">
+        <div class="cta-btn msg-btn"><svg viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 6.92 2 11.75c0 2.48 1.22 4.72 3.2 6.28-.2 1.55-1.02 3.12-2.45 4.22 2.12-.18 3.86-1.1 5.02-1.92 1.3.37 2.72.57 4.23.57 5.52 0 10-3.92 10-8.75S17.52 3 12 3z"/></svg></div>
+        Message
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn book-btn"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></div>
+        Book
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn wa-btn"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" fill="none" stroke="#25D366" stroke-width="2"/></svg></div>
+        Share
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn save-btn"><svg viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.3l8.8-8.6a5 5 0 0 0 0-7.1z"/></svg></div>
+        Save
+      </div>
     </div>
+    <p class="note">Red, gold, white, white. Words under so Message / Book / Share / Save are obvious.</p>
   </button>
 
-  <button class="sample c" type="button" data-pick="C">
-    <div class="kicker">C · Green</div>
-    <div class="stack">
-      <div class="primary">Message vendor</div>
-      <div class="ghost">Book this</div>
-      <div class="ghost">Share</div>
-      <div class="ghost">Save to favorites</div>
-      <div class="link">View vendor profile</div>
-      <div class="ghost">Rate this vendor</div>
-      <div class="ghost">Report this service</div>
+  <button class="sample" type="button" data-pick="C">
+    <div class="kicker">C · Red, teal, white, purple</div>
+    <div class="fixed-cta-row">
+      <div class="cta-lab">
+        <div class="cta-btn msg-btn"><svg viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 6.92 2 11.75c0 2.48 1.22 4.72 3.2 6.28-.2 1.55-1.02 3.12-2.45 4.22 2.12-.18 3.86-1.1 5.02-1.92 1.3.37 2.72.57 4.23.57 5.52 0 10-3.92 10-8.75S17.52 3 12 3z"/></svg></div>
+        Message
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn teal-book"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></div>
+        Book
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn share-btn"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></div>
+        Share
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn purple-save"><svg viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.3l8.8-8.6a5 5 0 0 0 0-7.1z" fill="#fff" stroke="none"/></svg></div>
+        Save
+      </div>
     </div>
+    <p class="note">Same round bar. Different colors on each button, not one color for the whole set.</p>
   </button>
 
-  <button class="sample d" type="button" data-pick="D">
-    <div class="kicker">D · Black and gold</div>
-    <div class="stack">
-      <div class="primary">Message vendor</div>
-      <div class="ghost">Book this</div>
-      <div class="ghost">Share</div>
-      <div class="ghost">Save to favorites</div>
-      <div class="link">View vendor profile</div>
-      <div class="ghost">Rate this vendor</div>
-      <div class="ghost">Report this service</div>
+  <button class="sample" type="button" data-pick="D">
+    <div class="kicker">D · Blue, gold, green, white</div>
+    <div class="fixed-cta-row">
+      <div class="cta-lab">
+        <div class="cta-btn blue-msg"><svg viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 6.92 2 11.75c0 2.48 1.22 4.72 3.2 6.28-.2 1.55-1.02 3.12-2.45 4.22 2.12-.18 3.86-1.1 5.02-1.92 1.3.37 2.72.57 4.23.57 5.52 0 10-3.92 10-8.75S17.52 3 12 3z"/></svg></div>
+        Message
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn book-btn"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></div>
+        Book
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn sms-btn"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3" fill="#fff"/><circle cx="6" cy="12" r="3" fill="#fff"/><circle cx="18" cy="19" r="3" fill="#fff"/></svg></div>
+        Share
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn save-btn"><svg viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.3l8.8-8.6a5 5 0 0 0 0-7.1z"/></svg></div>
+        Save
+      </div>
     </div>
+    <p class="note">Blue message, gold book, green share, white save.</p>
   </button>
 
-  <button class="sample e" type="button" data-pick="E">
-    <div class="kicker">E · Brown</div>
-    <div class="stack">
-      <div class="primary">Message vendor</div>
-      <div class="ghost">Book this</div>
-      <div class="ghost">Share</div>
-      <div class="ghost">Save to favorites</div>
-      <div class="link">View vendor profile</div>
-      <div class="ghost">Rate this vendor</div>
-      <div class="ghost">Report this service</div>
+  <button class="sample" type="button" data-pick="E">
+    <div class="kicker">E · Black and gold bar</div>
+    <div class="fixed-cta-row">
+      <div class="cta-lab">
+        <div class="cta-btn gold-msg"><svg viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 6.92 2 11.75c0 2.48 1.22 4.72 3.2 6.28-.2 1.55-1.02 3.12-2.45 4.22 2.12-.18 3.86-1.1 5.02-1.92 1.3.37 2.72.57 4.23.57 5.52 0 10-3.92 10-8.75S17.52 3 12 3z"/></svg></div>
+        Message
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn book-btn"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></div>
+        Book
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn share-btn"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></div>
+        Share
+      </div>
+      <div class="cta-lab">
+        <div class="cta-btn save-btn"><svg viewBox="0 0 24 24"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.3l8.8-8.6a5 5 0 0 0 0-7.1z"/></svg></div>
+        Save
+      </div>
     </div>
-  </button>
-
-  <button class="sample f" type="button" data-pick="F">
-    <div class="kicker">F · Teal</div>
-    <div class="stack">
-      <div class="primary">Message vendor</div>
-      <div class="ghost">Book this</div>
-      <div class="ghost">Share</div>
-      <div class="ghost">Save to favorites</div>
-      <div class="link">View vendor profile</div>
-      <div class="ghost">Rate this vendor</div>
-      <div class="ghost">Report this service</div>
-    </div>
-  </button>
-
-  <button class="sample g" type="button" data-pick="G">
-    <div class="kicker">G · Purple</div>
-    <div class="stack">
-      <div class="primary">Message vendor</div>
-      <div class="ghost">Book this</div>
-      <div class="ghost">Share</div>
-      <div class="ghost">Save to favorites</div>
-      <div class="link">View vendor profile</div>
-      <div class="ghost">Rate this vendor</div>
-      <div class="ghost">Report this service</div>
-    </div>
-  </button>
-
-  <button class="sample h" type="button" data-pick="H">
-    <div class="kicker">H · Each button a different color</div>
-    <div class="stack">
-      <div class="primary">Message vendor</div>
-      <div class="ghost book">Book this</div>
-      <div class="ghost share">Share</div>
-      <div class="ghost save">Save to favorites</div>
-      <div class="link">View vendor profile</div>
-      <div class="ghost rate">Rate this vendor</div>
-      <div class="ghost report">Report this service</div>
-    </div>
+    <p class="note">Black message with gold icon, gold book, white share, white save.</p>
   </button>
 
   <div class="pick-bar">
     <strong id="picked">No pick yet</strong>
-    <div><span>Reply with A through H. Live pages are not changed.</span></div>
+    <div><span>Reply with A, B, C, D, or E. Nothing on the live listing is changed.</span></div>
   </div>
   <script>
     const picked = document.getElementById("picked");
