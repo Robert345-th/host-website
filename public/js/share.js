@@ -96,6 +96,10 @@
     return `<span class="${cls}" title="${label}">${verifiedMarkSvg()}${text}</span>`;
   }
 
-  window.ZEShare = { shareService, shareShop, openShareSheet, copyText, openWhatsApp, serviceUrl, shopUrl, verifiedStamp };
+  function openFacebook(url) {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank");
+  }
+
+  window.ZEShare = { shareService, shareShop, openShareSheet, copyText, openWhatsApp, openFacebook, shareText, serviceUrl, shopUrl, verifiedStamp };
   window.zeVerifiedStamp = verifiedStamp;
 })();

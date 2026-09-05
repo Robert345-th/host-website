@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>ZedEvents - Service</title>
   <meta name="theme-color" content="#ffffff" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="ZedEvents" />
+  <meta id="ogTitle" property="og:title" content="ZedEvents" />
+  <meta id="ogDescription" property="og:description" content="Find event services in Zambia." />
+  <meta id="ogUrl" property="og:url" content="" />
+  <meta id="ogImage" property="og:image" content="" />
+  <meta name="twitter:card" content="summary_large_image" />
   <script src="/js/prefs.js"></script>
   <link rel="manifest" href="/manifest.json" />
   <style>
@@ -12,7 +19,7 @@
       --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
       --text: #211D1A; --subtext: #5C5955; --orange: #C2410C;
       --cream: #FFF3E8; --peach: #FFD8B8; --black: #111111;
-      --gold: #F5C518; --price-red: #B42318; --thumb-bg: #E9E2D3;
+      --gold: #F5C518; --price-red: #B42318; --thumb-bg: #E9E2D3; --red-btn: #E01B27;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -75,7 +82,29 @@
       background: var(--black); border: none; padding: 0;
       display: flex; align-items: center; justify-content: center;
     }
-    .more-button svg { width: 22px; height: 22px; fill: var(--gold); display: block; }
+    .more-button svg { width: 22px; height: 22px; fill: var(--gold); display: block; stroke: none; }
+    .hero-wrap .round-btn {
+      position: absolute; top: 10px; z-index: 10;
+      width: 48px; height: 48px; border-radius: 24px;
+      background: var(--black); border: none; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .share-button { left: 12px; }
+    .favorite-button { right: 68px; }
+    .share-button svg { fill: var(--gold); stroke: none; width: 22px; height: 22px; display: block; }
+    .favorite-button svg {
+      width: 22px; height: 22px; display: block;
+      fill: none; stroke: var(--gold); stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .favorite-button.saved svg { fill: var(--red-btn); stroke: var(--red-btn); }
+    .boost-chip {
+      position: absolute; left: 12px; top: 66px; z-index: 10;
+      background: var(--black); color: var(--gold);
+      font-size: 10px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+      padding: 4px 8px; border-radius: 4px;
+    }
+    .boost-chip[hidden] { display: none; }
     .thumb-row {
       position: absolute; left: 0; right: 0; bottom: 92px; z-index: 8;
       display: flex; gap: 8px; padding: 0 12px;
@@ -112,8 +141,7 @@
     .body-pad { padding: 14px 16px 8px; max-width: 640px; margin: 0 auto; }
     .seller-row {
       display: flex; align-items: center; gap: 10px;
-      width: 100%; background: var(--card); border: 1.5px solid var(--text);
-      border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;
+      width: 100%; background: none; border: none; padding: 0;
       text-align: left; color: inherit;
     }
     .seller-avatar {
@@ -170,7 +198,7 @@
       padding: 14px 12px; margin-bottom: 8px; cursor: pointer;
       font-size: 14px; font-weight: 700; color: var(--text); text-align: left;
     }
-    .menu-row[hidden] { display: none; }
+    .review-btn[hidden], .menu-row[hidden] { display: none; }
     .menu-row svg {
       width: 20px; height: 20px; stroke: var(--text); fill: none; stroke-width: 2;
       stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
@@ -208,7 +236,61 @@
       width: 22px; height: 22px; fill: none; stroke: var(--black);
       stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
-    .cta-lab.saved svg { fill: var(--black); }
+    .cta-lab.saved svg { fill: var(--red-btn); stroke: var(--red-btn); }
+
+    .seller-card {
+      background: var(--card); border: 1.5px solid var(--text);
+      border-radius: 12px; margin-bottom: 12px; overflow: hidden;
+    }
+    .seller-summary {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; background: none; border: none; padding: 10px 12px;
+      text-align: left; color: inherit;
+    }
+    .seller-chev {
+      margin-left: auto; width: 18px; height: 18px; flex-shrink: 0;
+      stroke: var(--subtext); fill: none; stroke-width: 2.2;
+      stroke-linecap: round; stroke-linejoin: round;
+      transition: transform 0.15s;
+    }
+    .seller-card.open .seller-chev { transform: rotate(180deg); }
+    .seller-panel { display: none; padding: 0 12px 12px; border-top: 1px solid var(--border); }
+    .seller-card.open .seller-panel { display: block; padding-top: 10px; }
+    .seller-actions { display: flex; gap: 10px; }
+    .view-shop-btn, .review-btn {
+      flex: 1; padding: 11px 12px; border-radius: 12px;
+      font-size: 12px; font-weight: 800; border: none; cursor: pointer;
+    }
+    .view-shop-btn { background: var(--black); color: var(--gold); }
+    .review-btn { background: var(--card); color: var(--text); border: 1.5px solid var(--text); }
+    .rating-text { font-size: 11px; color: var(--price-red); font-weight: 600; margin-top: 2px; }
+    .map-row, .posted-row {
+      display: flex; align-items: center; gap: 8px;
+      width: 100%; background: var(--card); border: 1.5px solid var(--text);
+      border-radius: 12px; padding: 12px; margin-bottom: 12px;
+      text-align: left; color: inherit; font-size: 13px; font-weight: 700;
+    }
+    .map-row[hidden], .posted-row[hidden], .owner-row[hidden], .similar-wrap[hidden] { display: none; }
+    .map-row svg {
+      width: 18px; height: 18px; stroke: var(--text); fill: none; stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+    }
+    .map-row span:last-child { margin-left: auto; font-size: 11px; color: var(--subtext); font-weight: 700; }
+    .posted-row { color: var(--subtext); font-weight: 600; }
+    .owner-row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .owner-row button {
+      flex: 1; background: var(--black); color: var(--gold); border: none;
+      border-radius: 12px; padding: 12px; font-size: 13px; font-weight: 800;
+    }
+    .similar-head {
+      font-size: 12px; font-weight: 800; text-transform: uppercase;
+      margin: 4px 0 10px;
+    }
+    .similar-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; overscroll-behavior-x: contain; }
+    .similar-card { width: 120px; flex-shrink: 0; cursor: pointer; background: none; border: none; padding: 0; text-align: left; color: inherit; }
+    .similar-card img { width: 120px; height: 90px; object-fit: cover; border-radius: 10px; display: block; background: var(--border); }
+    .similar-card .p { font-size: 12px; font-weight: 800; margin-top: 4px; }
+    .similar-card .n { font-size: 11px; color: var(--subtext); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .viewer-overlay {
       display: none; position: fixed; inset: 0; background: #000; z-index: 300; overflow: hidden;
@@ -243,7 +325,7 @@
     .viewer-img {
       position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: contain; -webkit-user-drag: none; z-index: 1;
-      touch-action: pan-y pinch-zoom;
+      touch-action: none;
     }
 
     .modal-overlay {
@@ -288,9 +370,16 @@
       <div class="media-main" id="mediaMain">
         <div class="thumb-ph"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="m21 16-5-5-4 4-2-2-5 5"/></svg></div>
       </div>
+      <button class="round-btn share-button" id="photoShareBtn" type="button" aria-label="Share">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+      </button>
+      <button class="round-btn favorite-button" id="photoFavBtn" type="button" aria-label="Save">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 21.3l8.8-8.6a5 5 0 0 0 0-7.1z"/></svg>
+      </button>
       <button class="more-button" id="moreBtn" type="button" aria-label="More">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
       </button>
+      <div class="boost-chip" id="boostChip" hidden data-i18n="boosted">Boosted</div>
       <div class="thumb-row" id="mediaThumbs" hidden></div>
       <div class="photo-price">
         <div class="price" id="price">—</div>
@@ -300,19 +389,43 @@
     </div>
 
     <div class="body-pad">
-      <button class="seller-row" type="button" id="sellerRow">
-        <div class="seller-avatar" id="sellerAvatar">V</div>
-        <div class="seller-info">
-          <div class="seller-name-line">
-            <span class="seller-name" id="vendor">—</span>
-            <span id="vendorBadge"></span>
+      <div class="seller-card" id="sellerCard">
+        <button class="seller-summary" type="button" id="sellerToggle">
+          <div class="seller-avatar" id="sellerAvatar">V</div>
+          <div class="seller-info">
+            <div class="seller-name-line">
+              <span class="seller-name" id="vendor">—</span>
+              <span id="vendorBadge"></span>
+            </div>
+            <div class="seller-sub" id="sellerSub">Shop</div>
+            <div class="rating-text" id="ratingText" hidden></div>
           </div>
-          <div class="seller-sub" id="sellerSub">Shop</div>
+          <svg class="seller-chev" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="seller-panel">
+          <div class="seller-actions">
+            <button class="view-shop-btn" type="button" id="viewShopBtn" data-i18n="view_vendor">View vendor profile</button>
+            <button class="review-btn" type="button" id="rateShopBtn" data-i18n="rate_vendor">Rate this vendor</button>
+          </div>
         </div>
+      </div>
+      <div class="owner-row" id="ownerRow" hidden>
+        <button type="button" id="editBtn" data-i18n="edit">Edit</button>
+        <button type="button" id="boostBtn" data-i18n="boost_this">Boost</button>
+      </div>
+      <button class="map-row" type="button" id="mapRow" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span id="locationLabel"></span>
+        <span data-i18n="open_map">Open map</span>
       </button>
+      <div class="posted-row" id="postedRow" hidden></div>
       <div class="desc-card">
         <div class="desc-label">Details</div>
         <p class="desc" id="desc"></p>
+      </div>
+      <div class="similar-wrap" id="similarWrap" hidden>
+        <div class="similar-head" data-i18n="similar_services">Similar services</div>
+        <div class="similar-row" id="similarRow"></div>
       </div>
     </div>
   </div>
@@ -358,9 +471,29 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         <span id="rateBtnLabel" data-i18n="rate_vendor">Rate this vendor</span>
       </button>
+      <button class="menu-row" type="button" id="shareWaBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        <span data-i18n="share_whatsapp">Share on WhatsApp</span>
+      </button>
+      <button class="menu-row" type="button" id="shareFbBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        <span data-i18n="share_facebook">Share on Facebook</span>
+      </button>
+      <button class="menu-row" type="button" id="copyLinkBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span data-i18n="copy_link">Copy link</span>
+      </button>
+      <button class="menu-row" type="button" id="shareShopBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span data-i18n="share_shop">Share shop</span>
+      </button>
       <button class="menu-row danger" type="button" id="reportBtn">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
         <span data-i18n="report_service">Report this service</span>
+      </button>
+      <button class="menu-row danger" type="button" id="blockBtn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        <span data-i18n="block_vendor">Block this vendor</span>
       </button>
       <button class="menu-cancel" type="button" id="moreMenuCancel" data-i18n="cancel">Cancel</button>
     </div>
@@ -448,13 +581,35 @@
         document.title = title + " - ZedEvents";
         document.getElementById("title").textContent = title;
         document.getElementById("price").textContent = ZE.formatPrice(itemData.price);
-        document.getElementById("photoMeta").textContent = [itemData.category, itemData.location_label]
-          .filter(Boolean).join(" · ");
+        const viewsWord = typeof t === "function" ? t("views") : "views";
+        const metaBits = [];
+        if (itemData.view_count > 0) metaBits.push(`${itemData.view_count} ${viewsWord}`);
+        if (itemData.category) metaBits.push(itemData.category);
+        if (itemData.location_label) metaBits.push(itemData.location_label);
+        document.getElementById("photoMeta").textContent = metaBits.join(" · ");
         document.getElementById("vendor").textContent = shopName;
         document.getElementById("vendorBadge").innerHTML =
           typeof zeVerifiedStamp === "function" ? zeVerifiedStamp(itemData.is_verified) : "";
         document.getElementById("sellerSub").textContent = itemData.category || "Shop";
         document.getElementById("desc").textContent = itemData.description || "No description yet.";
+
+        const boosted = itemData.boosted_until && new Date(itemData.boosted_until) > new Date();
+        document.getElementById("boostChip").hidden = !boosted;
+
+        function setOg() {
+          const url = ZEShare.serviceUrl(itemData);
+          const photo = photoList[0] ? imgUrl(photoList[0], "full") : "";
+          const desc = (itemData.description || title).slice(0, 160);
+          const set = (id, attr, val) => {
+            const el = document.getElementById(id);
+            if (el && val) el.setAttribute(attr, val);
+          };
+          document.title = title + " - ZedEvents";
+          set("ogTitle", "content", title);
+          set("ogDescription", "content", desc);
+          set("ogUrl", "content", url);
+          set("ogImage", "content", photo);
+        }
 
         const avatar = document.getElementById("sellerAvatar");
         if (itemData.business_photo_url) {
@@ -485,6 +640,82 @@
             });
           }
         }
+        setOg();
+
+        if (itemData.location_label || (itemData.latitude && itemData.longitude)) {
+          const mapRow = document.getElementById("mapRow");
+          mapRow.hidden = false;
+          document.getElementById("locationLabel").textContent = itemData.location_label || "Location";
+          mapRow.onclick = () => {
+            const lat = itemData.latitude, lng = itemData.longitude;
+            const href = (lat && lng)
+              ? `https://maps.google.com/?q=${lat},${lng}`
+              : `https://maps.google.com/?q=${encodeURIComponent(itemData.location_label)}`;
+            window.open(href, "_blank");
+          };
+        }
+
+        if (itemData.date_posted) {
+          const posted = document.getElementById("postedRow");
+          const d = new Date(itemData.date_posted);
+          if (!Number.isNaN(d.getTime())) {
+            posted.hidden = false;
+            const label = typeof t === "function" ? t("posted") : "Posted";
+            posted.textContent = `${label} ${d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}`;
+          }
+        }
+
+        const isOwner = !!(user && itemData.vendor_id && String(user.id) === String(itemData.vendor_id));
+        if (isOwner) {
+          document.getElementById("ownerRow").hidden = false;
+          document.getElementById("editBtn").onclick = () => { location.href = `/edit-service.html?id=${id}`; };
+          document.getElementById("boostBtn").onclick = () => { location.href = `/boost-service.html?id=${id}`; };
+          document.getElementById("msgBtn").classList.add("hidden");
+          document.getElementById("bookBtn").classList.add("hidden");
+        }
+
+        document.getElementById("sellerToggle").onclick = () => {
+          document.getElementById("sellerCard").classList.toggle("open");
+        };
+
+        const goVendor = () => {
+          if (!itemData.vendor_id) return;
+          location.href = `/vendor.html?id=${itemData.vendor_id}`;
+        };
+        const goRate = () => {
+          if (!itemData.vendor_id) return;
+          if (!ZEAuth.requireLogin(location.pathname + location.search)) return;
+          location.href = `/vendor.html?id=${itemData.vendor_id}&rate=1`;
+        };
+        document.getElementById("viewShopBtn").onclick = goVendor;
+        document.getElementById("rateShopBtn").onclick = goRate;
+
+        if (itemData.vendor_id) {
+          ZE.api(`/reviews/vendor/${itemData.vendor_id}`).then((rev) => {
+            const n = Number(rev.total) || 0;
+            const avg = rev.average ? Number(rev.average) : 0;
+            const el = document.getElementById("ratingText");
+            if (n > 0) {
+              el.hidden = false;
+              el.textContent = `${avg.toFixed(1)} ★ · ${n} review${n === 1 ? "" : "s"}`;
+            }
+          }).catch(() => {});
+        }
+
+        if (itemData.category_id) {
+          ZE.api(`/services?category_id=${encodeURIComponent(itemData.category_id)}`).then((list) => {
+            const others = (Array.isArray(list) ? list : []).filter((s) => String(s.id) !== String(id)).slice(0, 8);
+            if (!others.length) return;
+            const wrap = document.getElementById("similarWrap");
+            const row = document.getElementById("similarRow");
+            wrap.hidden = false;
+            row.innerHTML = others.map((s) => {
+              const pic = imgUrl(ZE.firstPhoto(s.photos), "thumb");
+              const img = pic ? `<img src="${escapeHtml(pic)}" alt="" />` : `<div class="thumb-ph" style="width:120px;height:90px;border-radius:10px;background:#E9E2D3"></div>`;
+              return `<a class="similar-card" href="/service.html?id=${s.id}">${img}<div class="p">${escapeHtml(ZE.formatPrice(s.price))}</div><div class="n">${escapeHtml(s.title || "")}</div></a>`;
+            }).join("");
+          }).catch(() => {});
+        }
 
         const moreMenu = document.getElementById("moreMenu");
         const closeMoreMenu = () => moreMenu.classList.remove("open");
@@ -494,48 +725,104 @@
           if (e.target.id === "moreMenu") closeMoreMenu();
         });
 
-        const goVendor = () => {
-          if (!itemData.vendor_id) return;
-          location.href = `/vendor.html?id=${itemData.vendor_id}`;
-        };
-        document.getElementById("sellerRow").onclick = goVendor;
-
         const vendorLink = document.getElementById("vendorLink");
         const rateBtn = document.getElementById("rateBtn");
+        const rateShopBtn = document.getElementById("rateShopBtn");
+        const blockBtn = document.getElementById("blockBtn");
+        const shareShopBtn = document.getElementById("shareShopBtn");
         if (itemData.vendor_id) {
-          vendorLink.onclick = goVendor;
-          const rateLabel = document.getElementById("rateBtnLabel");
-          if (rateLabel) rateLabel.textContent = typeof t === "function" ? t("rate_vendor") : "Rate this vendor";
-          const me = ZEAuth.getUser();
-          if (me && String(me.id) === String(itemData.vendor_id)) rateBtn.hidden = true;
-          else {
-            rateBtn.onclick = () => {
+          vendorLink.onclick = () => { closeMoreMenu(); goVendor(); };
+          shareShopBtn.onclick = () => { closeMoreMenu(); ZEShare.shareShop(itemData.vendor_id, shopName); };
+          if (isOwner) {
+            rateBtn.hidden = true;
+            rateShopBtn.hidden = true;
+            blockBtn.hidden = true;
+            document.getElementById("reportBtn").hidden = true;
+          } else {
+            rateBtn.onclick = () => { closeMoreMenu(); goRate(); };
+            blockBtn.onclick = async () => {
               if (!ZEAuth.requireLogin(location.pathname + location.search)) return;
-              location.href = `/vendor.html?id=${itemData.vendor_id}&rate=1`;
+              const ok = await ZEUI.confirm({
+                title: typeof t === "function" ? t("block_vendor") : "Block this vendor",
+                message: shopName,
+                okText: typeof t === "function" ? t("block_vendor") : "Block",
+                danger: true,
+              });
+              if (!ok) return;
+              try {
+                await ZE.api(`/messages/block/${itemData.vendor_id}`, { method: "POST" });
+                ZEUI.toast(typeof t === "function" ? t("blocked") : "Vendor blocked.", "success");
+                closeMoreMenu();
+                location.href = "/";
+              } catch (err) {
+                ZEUI.error(err.message || "Could not block.");
+              }
             };
           }
         } else {
           vendorLink.hidden = true;
           rateBtn.hidden = true;
+          rateShopBtn.hidden = true;
+          shareShopBtn.hidden = true;
+          blockBtn.hidden = true;
         }
 
-        document.getElementById("shareBtn").onclick = () => ZEShare.shareService(itemData);
+        document.getElementById("shareWaBtn").onclick = () => {
+          closeMoreMenu();
+          ZEShare.openWhatsApp(ZEShare.shareText ? ZEShare.shareText(itemData) : `${title}\n${ZEShare.serviceUrl(itemData)}`);
+        };
+        document.getElementById("shareFbBtn").onclick = () => {
+          closeMoreMenu();
+          ZEShare.openFacebook(ZEShare.serviceUrl(itemData));
+        };
+        document.getElementById("copyLinkBtn").onclick = () => {
+          closeMoreMenu();
+          ZEShare.copyText(ZEShare.serviceUrl(itemData));
+        };
+
+        function doShare() {
+          ZEShare.shareService(itemData);
+        }
+        document.getElementById("shareBtn").onclick = doShare;
+        document.getElementById("photoShareBtn").onclick = (e) => { e.stopPropagation(); doShare(); };
+
         document.getElementById("reportBtn").onclick = () => {
           if (!ZEAuth.requireLogin(location.pathname + location.search)) return;
           const phone = itemData.vendor_phone || "";
           location.href = `/report-user.html?phone=${encodeURIComponent(phone)}`;
         };
 
-        document.getElementById("favBtn").onclick = async () => {
+        let saved = false;
+        function setSaved(on) {
+          saved = on;
+          document.getElementById("favBtn").classList.toggle("saved", on);
+          document.getElementById("photoFavBtn").classList.toggle("saved", on);
+        }
+        async function toggleSave(e) {
+          if (e) e.stopPropagation();
           if (!ZEAuth.requireLogin(location.pathname + location.search)) return;
           try {
-            await ZE.api(`/favorites/${id}`, { method: "POST" });
-            document.getElementById("favBtn").classList.add("saved");
-            ZEUI.toast("Saved to favorites.", "success");
+            if (saved) {
+              await ZE.api(`/favorites/${id}`, { method: "DELETE" });
+              setSaved(false);
+            } else {
+              await ZE.api(`/favorites/${id}`, { method: "POST" });
+              setSaved(true);
+              ZEUI.toast(typeof t === "function" ? t("save_favorites") : "Saved to favorites.", "success");
+            }
           } catch (err) {
             ZEUI.error(err.message || "Could not save favorite.");
           }
-        };
+        }
+        document.getElementById("favBtn").onclick = toggleSave;
+        document.getElementById("photoFavBtn").onclick = toggleSave;
+        if (user) {
+          ZE.api(`/favorites/${id}/status`).then((st) => setSaved(!!st.saved)).catch(() => {
+            ZE.api("/favorites").then((list) => {
+              setSaved((Array.isArray(list) ? list : []).some((s) => String(s.id) === String(id)));
+            }).catch(() => {});
+          });
+        }
 
         document.getElementById("msgBtn").onclick = () => {
           if (!itemData.vendor_id) {
@@ -644,7 +931,7 @@
 
     document.querySelector(".hero-wrap").addEventListener("click", (e) => {
       if (viewerOverlay.classList.contains("open")) return;
-      if (e.target.closest(".more-button, .thumb-row")) return;
+      if (e.target.closest(".more-button, .thumb-row, .round-btn, .boost-chip")) return;
       openViewer(photoIndex);
     });
     document.getElementById("viewerBackBtn").addEventListener("click", (e) => {
