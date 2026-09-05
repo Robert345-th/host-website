@@ -3,12 +3,14 @@
   const ICONS = {
     home: '<path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/>',
     wanted: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+    booked: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
     shop: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
     install: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
   };
   const ITEMS = [
     { key: "home", href: "/", label: "Home", labelKey: "home" },
     { key: "wanted", href: "/wanted.html", label: "Wanted", labelKey: "wanted" },
+    { key: "booked", href: "/booked.html", label: "Booked", labelKey: "booked" },
     { key: "shop", href: "/my-shop.html", label: "My Shop", labelKey: "my_shop" },
   ];
 
@@ -29,7 +31,7 @@
       body.ze-has-bottom-nav { padding-bottom: 72px; }
       .bottom-nav .nav-item {
         flex: 1; text-align: center; text-decoration: none; color: #9a9490;
-        font-size: 10px; font-weight: 600; padding: 4px 2px; min-width: 0;
+        font-size: 9px; font-weight: 600; padding: 4px 1px; min-width: 0;
         background: none; border: none; cursor: pointer; font-family: inherit;
       }
       .bottom-nav .nav-item.active { color: #F5C518; }
@@ -90,7 +92,7 @@
     mount.className = "bottom-nav";
     mount.innerHTML = ITEMS.map((item) => {
       const isActive = active && item.key === active;
-      const needsLogin = item.key === "shop";
+      const needsLogin = item.key === "shop" || item.key === "booked";
       return `
         <a href="${item.href}" class="nav-item${isActive ? " active" : ""}"${needsLogin ? ' data-require-login="1"' : ""}>
           <div class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[item.key]}</svg></div>

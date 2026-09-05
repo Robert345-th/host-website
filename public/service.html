@@ -85,10 +85,31 @@
       width: 100%; background: var(--orange); border: none; border-radius: 12px;
       padding: 14px; color: #fff; font-weight: 700; font-size: 15px;
     }
-    .ghost-btn {
-      width: 100%; background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 13px; color: var(--text);
-      font-weight: 700; font-size: 14px; text-align: center; display: block;
+    .ghost-btn.hidden { display: none; }
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200;
+      align-items: flex-end; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--bg); width: 100%; max-width: 480px;
+      border-radius: 0; border-top: 3px solid var(--black);
+      padding: 20px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+    }
+    .modal-title { font-size: 16px; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; }
+    .modal-warning { font-size: 12px; color: var(--subtext); margin-bottom: 12px; line-height: 1.4; }
+    .modal-input {
+      width: 100%; background: transparent; border: none; border-bottom: 2px solid var(--text);
+      border-radius: 0; padding: 10px 0; margin-bottom: 16px; font-size: 15px; color: var(--text);
+    }
+    .modal-actions { display: flex; gap: 10px; }
+    .modal-cancel {
+      flex: 1; background: var(--card); border: 2px solid var(--text); border-radius: 0;
+      padding: 13px; font-weight: 800; text-transform: uppercase; font-size: 12px;
+    }
+    .modal-ok {
+      flex: 1; background: var(--black); color: #F5C518; border: none; border-radius: 0;
+      padding: 13px; font-weight: 800; text-transform: uppercase; font-size: 12px;
     }
     .verified-stamp {
       display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 800;
@@ -128,11 +149,24 @@
       <p class="desc" id="desc"></p>
       <div class="actions">
         <button type="button" class="primary-btn" id="msgBtn" data-i18n="message_vendor">Message vendor</button>
+        <button type="button" class="ghost-btn" id="bookBtn" data-i18n="book_this">Book this</button>
         <button type="button" class="ghost-btn" id="shareBtn" data-i18n="share">Share</button>
         <button type="button" class="ghost-btn" id="favBtn" data-i18n="save_favorites">Save to favorites</button>
         <a class="ghost-btn" id="vendorLink" href="#" data-i18n="view_vendor">View vendor profile</a>
         <button type="button" class="ghost-btn" id="rateBtn">Rate this vendor</button>
         <button type="button" class="ghost-btn" id="reportBtn" data-i18n="report_service">Report this service</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="bookModal">
+    <div class="modal-box">
+      <div class="modal-title" data-i18n="book_this">Book this</div>
+      <div class="modal-warning" data-i18n="book_when_hint">Optional — date or area for the event.</div>
+      <input class="modal-input" id="bookDateInput" data-i18n-placeholder="book_when_ph" placeholder="e.g. 12 Oct, Lusaka" />
+      <div class="modal-actions">
+        <button class="modal-cancel" type="button" id="bookCancel">Cancel</button>
+        <button class="modal-ok" type="button" id="bookConfirm" data-i18n="book_this">Book this</button>
       </div>
     </div>
   </div>
@@ -269,6 +303,43 @@
             return;
           }
           location.href = `/chat.html?userId=${itemData.vendor_id}`;
+        };
+
+        const bookBtn = document.getElementById("bookBtn");
+        const bookModal = document.getElementById("bookModal");
+        const meUser = ZEAuth.getUser();
+        if (meUser && String(meUser.id) === String(itemData.vendor_id)) {
+          bookBtn.classList.add("hidden");
+        } else {
+          bookBtn.onclick = () => {
+            if (!ZEAuth.requireLogin(location.pathname + location.search)) return;
+            bookModal.classList.add("open");
+          };
+        }
+        document.getElementById("bookCancel").onclick = () => bookModal.classList.remove("open");
+        bookModal.addEventListener("click", (e) => {
+          if (e.target === bookModal) bookModal.classList.remove("open");
+        });
+        document.getElementById("bookConfirm").onclick = async () => {
+          const confirmBtn = document.getElementById("bookConfirm");
+          confirmBtn.disabled = true;
+          try {
+            await ZE.api("/bookings", {
+              method: "POST",
+              body: JSON.stringify({
+                service_id: Number(id),
+                event_date: document.getElementById("bookDateInput").value.trim() || null,
+              }),
+            });
+            location.href = "/booked.html";
+          } catch (err) {
+            if (err.status === 409) {
+              location.href = "/booked.html";
+              return;
+            }
+            ZEUI.error(err.message || (typeof t === "function" ? t("book_fail") : "Could not book."));
+            confirmBtn.disabled = false;
+          }
         };
       } catch {
         status.textContent = "Could not load this service.";
