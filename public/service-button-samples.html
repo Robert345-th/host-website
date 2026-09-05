@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Pick a service page layout</title>
-  <meta name="theme-color" content="#C2410C" />
+  <meta name="theme-color" content="#111111" />
   <style>
     :root {
       --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
       --text: #211D1A; --subtext: #5C5955; --orange: #C2410C;
-      --cream: #FFF3E8; --peach: #FFD8B8; --black: #111; --gold: #F5C518;
+      --cream: #FFF3E8; --black: #111; --gold: #F5C518;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -17,13 +17,14 @@
       background: var(--bg); color: var(--text);
       padding-bottom: 96px;
     }
-    button, a { font: inherit; }
+    button { font: inherit; }
     .topbar {
       position: sticky; top: 0; z-index: 50;
-      background: var(--orange); padding: 16px;
+      background: var(--black); padding: 16px;
+      border-bottom: 3px solid var(--gold);
     }
-    .header-title { color: var(--cream); font-size: 18px; font-weight: 700; }
-    .header-sub { color: var(--peach); font-size: 12px; margin-top: 2px; }
+    .header-title { color: var(--gold); font-size: 18px; font-weight: 700; }
+    .header-sub { color: #bbb; font-size: 12px; margin-top: 2px; }
     .intro {
       padding: 14px 16px 4px; font-size: 14px; color: var(--subtext); line-height: 1.45;
     }
@@ -32,24 +33,25 @@
       text-align: left; background: transparent; border: 2px solid var(--border);
       border-radius: 16px; padding: 10px; cursor: pointer; color: inherit;
     }
-    .option.picked { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(194,65,12,0.18); }
+    .option.picked { border-color: var(--black); box-shadow: 0 0 0 3px rgba(17,17,17,0.12); }
     .option-kicker {
       font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
-      text-transform: uppercase; color: var(--orange); margin: 2px 4px 8px;
+      text-transform: uppercase; color: var(--black); margin: 2px 4px 8px;
     }
     .option-note { font-size: 12px; color: var(--subtext); margin: 8px 4px 4px; line-height: 1.4; }
     .phone {
       background: var(--bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
     }
     .ph-bar {
-      background: var(--orange); padding: 10px 12px;
+      background: var(--black); padding: 10px 12px;
       display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 2px solid var(--gold);
     }
-    .ph-bar strong { color: var(--cream); font-size: 14px; }
-    .ph-bar small { color: var(--peach); display: block; font-size: 10px; }
+    .ph-bar strong { color: var(--gold); font-size: 14px; }
+    .ph-bar small { color: #bbb; display: block; font-size: 10px; }
     .ph-acc {
-      border: 1.5px solid rgba(255,255,255,0.35); color: #fff;
-      border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 700;
+      border: 1.5px solid var(--gold); color: var(--gold);
+      border-radius: 0; padding: 5px 10px; font-size: 11px; font-weight: 700;
     }
     .photo {
       height: 92px; margin: 8px 8px 6px; border-radius: 10px;
@@ -59,29 +61,34 @@
     .thumbs span {
       width: 36px; height: 36px; border-radius: 7px; background: #c5d4bf; display: block;
     }
-    .thumbs span:first-child { outline: 2px solid var(--orange); }
+    .thumbs span:first-child { outline: 2px solid var(--black); }
     .panel { background: #fff; margin: 0 8px 8px; border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
-    .cat { font-size: 10px; font-weight: 700; color: var(--orange); letter-spacing: 0.03em; text-transform: uppercase; }
+    .cat { font-size: 10px; font-weight: 700; color: var(--subtext); letter-spacing: 0.03em; text-transform: uppercase; }
     .svc { font-size: 16px; font-weight: 700; margin: 3px 0 4px; }
     .who { font-size: 12px; color: var(--subtext); }
-    .price { font-size: 16px; font-weight: 700; color: var(--orange); margin: 6px 0 4px; }
+    .price { font-size: 16px; font-weight: 700; margin: 6px 0 4px; }
     .loc { font-size: 12px; color: var(--subtext); }
     .desc { font-size: 12px; line-height: 1.4; margin-top: 6px; }
     .stack { display: flex; flex-direction: column; gap: 7px; margin-top: 12px; }
     .row { display: flex; gap: 7px; margin-top: 12px; }
-    .row + .row { margin-top: 7px; }
-    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 12px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 8px; }
     .btn {
       display: flex; align-items: center; justify-content: center; gap: 6px;
       width: 100%; border: none; border-radius: 10px; padding: 11px 8px;
       font-size: 13px; font-weight: 700; background: #eee; color: var(--text);
     }
-    .btn.orange { background: var(--orange); color: #fff; }
-    .btn.ghost { background: #fff; border: 1.5px solid #111; }
-    .btn.sq { border-radius: 0; text-transform: uppercase; letter-spacing: 0.04em; font-size: 12px; }
-    .btn.sq.orange { background: var(--black); color: var(--gold); }
-    .btn.sq.ghost { background: #fff; border: 2px solid #111; }
-    .btn.sm { padding: 9px 6px; font-size: 12px; }
+    .btn.black { background: var(--black); color: var(--gold); border-radius: 0; text-transform: uppercase; letter-spacing: 0.04em; font-size: 12px; }
+    .btn.outline {
+      background: #fff; border: 2px solid var(--black); color: var(--black);
+      border-radius: 0; text-transform: uppercase; letter-spacing: 0.04em; font-size: 12px;
+    }
+    .btn.cream {
+      background: var(--cream); border: 2px solid var(--black); color: var(--black);
+      border-radius: 0; text-transform: uppercase; letter-spacing: 0.04em; font-size: 12px;
+    }
+    .btn.round-black { background: var(--black); color: #fff; }
+    .btn.round-line { background: #fff; border: 1.5px solid #111; }
+    .btn.sm { padding: 9px 6px; font-size: 11px; }
     .icons {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px;
     }
@@ -90,9 +97,9 @@
       background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 8px 4px;
       font-size: 10px; font-weight: 700; color: var(--text);
     }
-    .icon-act svg, .btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .icon-act svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .text-links {
-      display: flex; justify-content: center; gap: 14px; margin-top: 10px;
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 10px;
       font-size: 11px; font-weight: 700; color: var(--subtext);
     }
     .vendor-chip {
@@ -100,16 +107,22 @@
       margin-top: 10px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px;
       font-size: 12px; font-weight: 700;
     }
-    .vendor-chip span { font-size: 11px; color: var(--orange); }
+    .vendor-chip span { font-size: 11px; color: var(--subtext); text-decoration: underline; }
     .sticky {
       display: flex; gap: 8px; padding: 8px;
-      background: #fff; border-top: 1px solid var(--border);
+      background: #fff; border-top: 2px solid var(--black);
     }
+    .list-links { margin-top: 10px; }
+    .list-links div {
+      font-size: 13px; font-weight: 700; padding: 10px 0;
+      border-bottom: 1px solid var(--border); color: var(--text);
+    }
+    .list-links div:last-child { border-bottom: none; color: var(--subtext); }
     .more-peek {
-      margin-top: 8px; background: #f7f5f1; border: 1px dashed var(--border); border-radius: 10px; padding: 8px;
+      margin-top: 8px; background: #f7f5f1; border: 1px dashed var(--border); padding: 8px;
     }
     .more-peek div { font-size: 11px; font-weight: 700; padding: 7px 4px; border-bottom: 1px solid var(--border); }
-    .more-peek div:last-child { border-bottom: none; color: #a33; }
+    .more-peek div:last-child { border-bottom: none; }
     .pick-bar {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
       background: #fff; border-top: 1px solid var(--border);
@@ -122,12 +135,12 @@
 <body>
   <div class="topbar">
     <div class="header-title">Service page buttons</div>
-    <div class="header-sub">Tap a layout. Then tell me the letter.</div>
+    <div class="header-sub">New set. No orange on the actions.</div>
   </div>
-  <p class="intro">Same listing, six ways to place Message, Book, Share, Save, shop, Rate, and Report. Live pages stay as they are until you pick.</p>
+  <p class="intro">The last six put orange on Message. These use black, gold, cream, and outline only. Price can stay as it is. Tap one, then reply with the letter.</p>
 
-  <button class="option" type="button" data-pick="A">
-    <div class="option-kicker">A · Two big buttons, then icons</div>
+  <button class="option" type="button" data-pick="G">
+    <div class="option-kicker">G · Black Message, outline Book</div>
     <div class="phone">
       <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
       <div class="photo"></div>
@@ -140,8 +153,8 @@
         <div class="loc">Kitwe</div>
         <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
         <div class="row">
-          <div class="btn orange">Message</div>
-          <div class="btn ghost">Book this</div>
+          <div class="btn black">Message</div>
+          <div class="btn outline">Book this</div>
         </div>
         <div class="icons">
           <div class="icon-act"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Share</div>
@@ -152,11 +165,11 @@
         <div class="text-links"><span>Report this service</span></div>
       </div>
     </div>
-    <p class="option-note">Message and Book sit together. Share, Save, Shop, and Rate are icons. Report stays a small link.</p>
+    <p class="option-note">Gold on black for Message. Book is a black outline. Icons stay grey and white.</p>
   </button>
 
-  <button class="option" type="button" data-pick="B">
-    <div class="option-kicker">B · Sticky bar at the bottom</div>
+  <button class="option" type="button" data-pick="H">
+    <div class="option-kicker">H · Black bar at the bottom</div>
     <div class="phone">
       <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
       <div class="photo"></div>
@@ -177,44 +190,15 @@
         </div>
       </div>
       <div class="sticky">
-        <div class="btn ghost">Book this</div>
-        <div class="btn orange">Message</div>
+        <div class="btn outline">Book this</div>
+        <div class="btn black">Message</div>
       </div>
     </div>
-    <p class="option-note">Book and Message stay on screen while you scroll. The extra actions sit as icons above.</p>
+    <p class="option-note">Book and Message stay on screen. Black and gold, not rust orange.</p>
   </button>
 
-  <button class="option" type="button" data-pick="C">
-    <div class="option-kicker">C · Two-column grid</div>
-    <div class="phone">
-      <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
-      <div class="photo"></div>
-      <div class="thumbs"><span></span><span></span><span></span></div>
-      <div class="panel">
-        <div class="cat">Tents &amp; chairs</div>
-        <div class="svc">White party tent, 100 guests</div>
-        <div class="who">Banda Tents &amp; Chairs</div>
-        <div class="price">K4,500</div>
-        <div class="loc">Kitwe</div>
-        <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
-        <div class="stack" style="margin-bottom:7px;">
-          <div class="btn orange">Message vendor</div>
-        </div>
-        <div class="grid2">
-          <div class="btn ghost sm">Book this</div>
-          <div class="btn ghost sm">Share</div>
-          <div class="btn ghost sm">Save</div>
-          <div class="btn ghost sm">View shop</div>
-          <div class="btn ghost sm">Rate</div>
-          <div class="btn ghost sm">Report</div>
-        </div>
-      </div>
-    </div>
-    <p class="option-note">One full-width Message, then the rest in pairs. Shorter than a single stack, still all visible.</p>
-  </button>
-
-  <button class="option" type="button" data-pick="D">
-    <div class="option-kicker">D · Two buttons, rest in More</div>
+  <button class="option" type="button" data-pick="I">
+    <div class="option-kicker">I · All outline, nothing filled</div>
     <div class="phone">
       <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
       <div class="photo"></div>
@@ -227,9 +211,67 @@
         <div class="loc">Kitwe</div>
         <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
         <div class="stack">
-          <div class="btn orange">Message vendor</div>
-          <div class="btn ghost">Book this</div>
-          <div class="btn ghost">More</div>
+          <div class="btn outline">Message vendor</div>
+        </div>
+        <div class="grid2">
+          <div class="btn outline sm">Book this</div>
+          <div class="btn outline sm">Share</div>
+          <div class="btn outline sm">Save</div>
+          <div class="btn outline sm">View shop</div>
+          <div class="btn outline sm">Rate</div>
+          <div class="btn outline sm">Report</div>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">Every action is a black outline on white. No fill color at all.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="J">
+    <div class="option-kicker">J · One black button, then a list</div>
+    <div class="phone">
+      <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
+      <div class="photo"></div>
+      <div class="thumbs"><span></span><span></span><span></span></div>
+      <div class="panel">
+        <div class="cat">Tents &amp; chairs</div>
+        <div class="svc">White party tent, 100 guests</div>
+        <div class="who">Banda Tents &amp; Chairs</div>
+        <div class="price">K4,500</div>
+        <div class="loc">Kitwe</div>
+        <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
+        <div class="stack">
+          <div class="btn black">Message vendor</div>
+        </div>
+        <div class="list-links">
+          <div>Book this</div>
+          <div>Share</div>
+          <div>Save to favorites</div>
+          <div>View vendor profile</div>
+          <div>Rate this vendor</div>
+          <div>Report this service</div>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">Only one button on the page. Everything else is a plain list, no colored blocks.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="K">
+    <div class="option-kicker">K · Cream Message, black Book</div>
+    <div class="phone">
+      <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
+      <div class="photo"></div>
+      <div class="thumbs"><span></span><span></span><span></span></div>
+      <div class="panel">
+        <div class="cat">Tents &amp; chairs</div>
+        <div class="svc">White party tent, 100 guests</div>
+        <div class="who">Banda Tents &amp; Chairs</div>
+        <div class="price">K4,500</div>
+        <div class="loc">Kitwe</div>
+        <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
+        <div class="stack">
+          <div class="btn cream">Message vendor</div>
+          <div class="btn black">Book this</div>
+          <div class="btn outline">More</div>
         </div>
         <div class="more-peek">
           <div>Share</div>
@@ -240,11 +282,11 @@
         </div>
       </div>
     </div>
-    <p class="option-note">The page only shows Message, Book, and More. Share, Save, shop, Rate, and Report open from More.</p>
+    <p class="option-note">Cream and black, same as login. Share, Save, shop, Rate, and Report sit in More.</p>
   </button>
 
-  <button class="option" type="button" data-pick="E">
-    <div class="option-kicker">E · Square black and gold</div>
+  <button class="option" type="button" data-pick="L">
+    <div class="option-kicker">L · Round black Message, four icons</div>
     <div class="phone">
       <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
       <div class="photo"></div>
@@ -257,38 +299,7 @@
         <div class="loc">Kitwe</div>
         <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
         <div class="stack">
-          <div class="btn sq orange">Message vendor</div>
-          <div class="btn sq ghost">Book this</div>
-        </div>
-        <div class="text-links">
-          <span>Share</span>
-          <span>Save</span>
-          <span>Shop</span>
-        </div>
-        <div class="text-links">
-          <span>Rate</span>
-          <span>Report</span>
-        </div>
-      </div>
-    </div>
-    <p class="option-note">Same square style as login and settings. Only two real buttons. Everything else is a text link.</p>
-  </button>
-
-  <button class="option" type="button" data-pick="F">
-    <div class="option-kicker">F · One button, four icons</div>
-    <div class="phone">
-      <div class="ph-bar"><div><strong>Service</strong><small>Details</small></div><div class="ph-acc">Account</div></div>
-      <div class="photo"></div>
-      <div class="thumbs"><span></span><span></span><span></span></div>
-      <div class="panel">
-        <div class="cat">Tents &amp; chairs</div>
-        <div class="svc">White party tent, 100 guests</div>
-        <div class="who">Banda Tents &amp; Chairs</div>
-        <div class="price">K4,500</div>
-        <div class="loc">Kitwe</div>
-        <p class="desc">White tent for about 100 seated guests. Delivery and setup on the Copperbelt.</p>
-        <div class="stack">
-          <div class="btn orange">Message vendor</div>
+          <div class="btn round-black">Message vendor</div>
         </div>
         <div class="icons">
           <div class="icon-act"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>Book</div>
@@ -299,12 +310,12 @@
         <div class="text-links"><span>Rate this vendor</span><span>Report</span></div>
       </div>
     </div>
-    <p class="option-note">One main action: Message. Book sits with Share, Save, and Shop as icons.</p>
+    <p class="option-note">White Message on black. Book sits with Share, Save, and Shop as icons. No orange fill.</p>
   </button>
 
   <div class="pick-bar">
     <strong id="picked">No pick yet</strong>
-    <div><span>Reply with A, B, C, D, E, or F.</span></div>
+    <div><span>Reply with G, H, I, J, K, or L.</span></div>
   </div>
   <script>
     const picked = document.getElementById("picked");
