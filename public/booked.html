@@ -57,8 +57,10 @@
   .card-meta { font-size: 12px; color: var(--subtext); margin-top: 8px; line-height: 1.45; }
   .card-meta-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
   .badge { background: var(--black); color: var(--gold); padding: 3px 8px; border-radius: 0; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+  .badge.pending { background: var(--warn-bg); color: var(--warn-text); border: 1px solid var(--text); }
   .badge.done { background: #2F4F3E; color: #fff; }
   .badge.cancelled { background: var(--subtext); color: #fff; }
+  .confirm-btn { background: var(--black); color: var(--gold); border: none; }
   .card-photo {
     width: calc(100% + 32px); height: 140px; object-fit: cover; display: block;
     margin: -16px -16px 12px; border-bottom: 1.5px solid var(--text);
@@ -82,7 +84,7 @@
 </div>
 
 <div class="explainer-box">
-  <div class="explainer-text" data-i18n="booked_explainer">Services you booked, and bookings for your shop. Open a service and tap Book this.</div>
+  <div class="explainer-text" data-i18n="booked_explainer">Ask to book a service. It stays pending until the shop confirms.</div>
 </div>
 
 <div id="content"><div class="center-box"><div class="spinner"></div></div></div>
@@ -133,9 +135,17 @@
   }
 
   function statusLabel(status) {
+    if (status === "pending") return t("booked_status_pending");
     if (status === "done") return t("booked_status_done");
-    if (status === "cancelled") return t("booked_status_cancelled");
+    if (status === "cancelled" || status === "declined") return t("booked_status_cancelled");
     return t("booked_status_booked");
+  }
+
+  function badgeClass(status) {
+    if (status === "pending") return "pending";
+    if (status === "done") return "done";
+    if (status === "cancelled" || status === "declined") return "cancelled";
+    return "";
   }
 
   function renderCard(row) {
@@ -143,7 +153,8 @@
     const otherName = isVendor ? row.customer_name : row.vendor_name;
     const otherId = isVendor ? row.customer_id : row.vendor_id;
     const hero = firstPhoto(row.service_photos);
-    const open = row.status === "booked";
+    const pending = row.status === "pending";
+    const confirmed = row.status === "booked";
     return `
       <div class="card">
         ${hero ? `<img class="card-photo" src="${escapeHtml(hero)}" alt="">` : ""}
@@ -153,20 +164,24 @@
         <div class="card-meta">${escapeHtml(isVendor ? t("booked_from") : t("booked_with"))}: ${escapeHtml(otherName || "")}</div>
         ${row.event_date ? `<div class="card-meta">${escapeHtml(t("booked_when"))}: ${escapeHtml(row.event_date)}</div>` : ""}
         ${row.notes ? `<div class="card-meta">${escapeHtml(row.notes)}</div>` : ""}
+        ${pending ? `<div class="card-meta">${escapeHtml(isVendor ? t("booked_needs_you") : t("booked_waiting"))}</div>` : ""}
         <div class="card-meta-row">
-          <div class="badge ${row.status === "done" ? "done" : row.status === "cancelled" ? "cancelled" : ""}">${escapeHtml(statusLabel(row.status))}</div>
+          <div class="badge ${badgeClass(row.status)}">${escapeHtml(statusLabel(row.status))}</div>
           <div class="badge">${escapeHtml(isVendor ? t("booked_role_vendor") : t("booked_role_customer"))}</div>
         </div>
         <div class="btn-row">
           <button type="button" class="action-btn msg-btn" data-chat="${otherId}">${t("messages")}</button>
-          ${open ? `<button type="button" class="action-btn done-btn" data-done="${row.id}">${t("booked_mark_done")}</button>` : ""}
-          ${open ? `<button type="button" class="action-btn cancel-btn" data-cancel="${row.id}">${t("booked_cancel")}</button>` : ""}
+          ${pending && isVendor ? `<button type="button" class="action-btn confirm-btn" data-confirm="${row.id}">${t("booked_confirm")}</button>` : ""}
+          ${pending && isVendor ? `<button type="button" class="action-btn cancel-btn" data-decline="${row.id}">${t("booked_decline")}</button>` : ""}
+          ${pending && !isVendor ? `<button type="button" class="action-btn cancel-btn" data-cancel="${row.id}">${t("booked_cancel")}</button>` : ""}
+          ${confirmed ? `<button type="button" class="action-btn done-btn" data-done="${row.id}">${t("booked_mark_done")}</button>` : ""}
+          ${confirmed ? `<button type="button" class="action-btn cancel-btn" data-cancel="${row.id}">${t("booked_cancel")}</button>` : ""}
         </div>
       </div>`;
   }
 
   function render() {
-    const visible = bookings.filter((b) => b.status !== "cancelled");
+    const visible = bookings.filter((b) => b.status !== "cancelled" && b.status !== "declined");
     if (!visible.length) {
       renderEmpty();
       return;
@@ -183,14 +198,26 @@
     content.querySelectorAll("[data-cancel]").forEach((btn) => {
       btn.addEventListener("click", () => setStatus(btn.dataset.cancel, "cancel"));
     });
+    content.querySelectorAll("[data-confirm]").forEach((btn) => {
+      btn.addEventListener("click", () => setStatus(btn.dataset.confirm, "confirm"));
+    });
+    content.querySelectorAll("[data-decline]").forEach((btn) => {
+      btn.addEventListener("click", () => setStatus(btn.dataset.decline, "decline"));
+    });
   }
 
   async function setStatus(id, action) {
+    const copy = {
+      confirm: { title: t("booked_confirm"), message: t("booked_confirm_ask"), ok: t("booked_confirm") },
+      decline: { title: t("booked_decline"), message: t("booked_decline_ask"), ok: t("booked_decline"), danger: true },
+      done: { title: t("booked_mark_done"), message: t("booked_done_confirm"), ok: t("booked_mark_done") },
+      cancel: { title: t("booked_cancel"), message: t("booked_cancel_confirm"), ok: t("booked_cancel"), danger: true },
+    }[action];
     const ok = await ZEUI.confirm({
-      title: action === "done" ? t("booked_mark_done") : t("booked_cancel"),
-      message: action === "done" ? t("booked_done_confirm") : t("booked_cancel_confirm"),
-      okText: action === "done" ? t("booked_mark_done") : t("booked_cancel"),
-      danger: action === "cancel",
+      title: copy.title,
+      message: copy.message,
+      okText: copy.ok,
+      danger: !!copy.danger,
     });
     if (!ok) return;
     try {
@@ -202,7 +229,7 @@
   }
 
   window.addEventListener("langchange", () => {
-    if (!bookings.filter((b) => b.status !== "cancelled").length) renderEmpty();
+    if (!bookings.filter((b) => b.status !== "cancelled" && b.status !== "declined").length) renderEmpty();
     else render();
   });
 </script>

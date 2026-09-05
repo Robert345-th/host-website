@@ -25,7 +25,7 @@ Then open http://localhost:3000 (or set `PORT`).
 - Vendor profiles: follow, reviews, verified mark
 - My Shop: two-column grid, insights, boost (Airtel/MTN K50 or free credit), edit shop name / photo / bio
 - Wanted Board: post what you need for an event; vendors can reply in chat
-- Booked: services you booked and bookings for your shop (Book this on a service)
+- Booked: request a service; the shop confirms before it is booked
 - Login / signup / settings: square black-and-gold layout (underline fields, gold settings topbar)
 - Settings: English / Bemba / Nyanja, dark mode, low-data, following, saved searches, referrals, contact support, test notification, privacy, terms
 - Offline page when the network is down
