@@ -41,8 +41,8 @@ app.get("/service.html", async (req, res, next) => {
     const r = await fetch(`${API_URL}/services/${encodeURIComponent(id)}`);
     if (r.ok) {
       const item = await r.json();
-      const title = escapeAttr((item.title || "Service") + " - ZedEvents");
-      const desc = escapeAttr(String(item.description || item.title || "ZedEvents").slice(0, 160));
+      const title = escapeAttr((item.title || "Service") + " - Host");
+      const desc = escapeAttr(String(item.description || item.title || "Host").slice(0, 160));
       const photo = escapeAttr(firstPhoto(item.photos));
       const url = escapeAttr(`${req.protocol}://${req.get("host")}/service.html?id=${id}`);
       html = html
@@ -67,5 +67,5 @@ app.get("*", (req, res) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`ZedEvents website on port ${port}`);
+  console.log(`Host website on port ${port}`);
 });

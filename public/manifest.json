@@ -1,6 +1,6 @@
 {
-  "name": "ZedEvents",
-  "short_name": "ZedEvents",
+  "name": "Host",
+  "short_name": "Host",
   "description": "Find event services in Zambia — catering, DJs, tents, décor and more.",
   "start_url": "/?utm_source=pwa",
   "scope": "/",

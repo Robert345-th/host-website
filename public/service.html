@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>ZedEvents - Service</title>
+  <title>Host - Service</title>
   <meta name="theme-color" content="#ffffff" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="ZedEvents" />
-  <meta id="ogTitle" property="og:title" content="ZedEvents" />
+  <meta property="og:site_name" content="Host" />
+  <meta id="ogTitle" property="og:title" content="Host" />
   <meta id="ogDescription" property="og:description" content="Find event services in Zambia." />
   <meta id="ogUrl" property="og:url" content="" />
   <meta id="ogImage" property="og:image" content="" />
@@ -603,7 +603,7 @@
         const title = itemData.title || "Untitled";
         const shopName = itemData.business_name || itemData.vendor_name || "Vendor";
         document.getElementById("headerTitle").textContent = title;
-        document.title = title + " - ZedEvents";
+        document.title = title + " - Host";
         document.getElementById("title").textContent = title;
         document.getElementById("price").textContent = ZE.formatPrice(itemData.price);
         const viewsWord = typeof t === "function" ? t("views") : "views";
@@ -629,7 +629,7 @@
             const el = document.getElementById(id);
             if (el && val) el.setAttribute(attr, val);
           };
-          document.title = title + " - ZedEvents";
+          document.title = title + " - Host";
           set("ogTitle", "content", title);
           set("ogDescription", "content", desc);
           set("ogUrl", "content", url);

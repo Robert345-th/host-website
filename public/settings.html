@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>ZedEvents - Settings</title>
+  <title>Host - Settings</title>
   <meta name="theme-color" content="#111111" />
   <script src="/js/prefs.js"></script>
   <link rel="manifest" href="/manifest.json" />
@@ -126,7 +126,7 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
           <span data-i18n="share_app">Share Link</span>
         </div>
-        <div class="row-sub" data-i18n="share_app_sub">Share ZedEvents with friends</div>
+        <div class="row-sub" data-i18n="share_app_sub">Share Host with friends</div>
       </div>
     </button>
     <div class="row" style="cursor:default;">
@@ -288,7 +288,7 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span data-i18n="download_app">Download App</span>
         </div>
-        <div class="row-sub" data-i18n="download_app_sub">Install ZedEvents on your home screen</div>
+        <div class="row-sub" data-i18n="download_app_sub">Install Host on your home screen</div>
       </div>
     </button>
 
@@ -324,7 +324,7 @@
       <div class="row-title logout-text" data-i18n="logout">Log Out</div>
     </button>
 
-    <div class="version-text">ZedEvents</div>
+    <div class="version-text">Host</div>
   </div>
 
   <div class="modal-overlay" id="logoutModal">
@@ -450,7 +450,7 @@
           }
           const data = await ZE.api("/notifications/test-self", { method: "POST" }).catch(() => ({ sent: 0 }));
           if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-            new Notification("ZedEvents", { body: t("push_test_local"), icon: "/icon-192.png" });
+            new Notification("Host", { body: t("push_test_local"), icon: "/icon-192.png" });
           }
           ZEUI.toast(data.sent ? t("push_test_ok") : t("push_test_local"), "success");
         } catch (err) {
@@ -464,7 +464,7 @@
 
       document.getElementById("shareRow").onclick = async () => {
         const url = location.origin + "/";
-        const data = { title: "ZedEvents", text: "Find event services in Zambia", url };
+        const data = { title: "Host", text: "Find event services in Zambia", url };
         try {
           if (navigator.share) {
             await navigator.share(data);

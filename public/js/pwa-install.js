@@ -44,7 +44,7 @@
     modal.style.cssText = "display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:flex-end;justify-content:center;";
     modal.innerHTML = `
       <div style="background:#F4F1EC;width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom));">
-        <div style="font-size:17px;font-weight:700;margin-bottom:8px;color:#211D1A;">Install ZedEvents</div>
+        <div style="font-size:17px;font-weight:700;margin-bottom:8px;color:#211D1A;">Install Host</div>
         <div style="font-size:13px;color:#5C5955;margin-bottom:18px;line-height:1.5;">
           iPhone can't install apps with one tap — two taps in Safari is enough:
         </div>
@@ -144,7 +144,7 @@
     banner.innerHTML = `
       <img src="/icon-192.png" alt="" width="40" height="40" style="border-radius:10px;flex-shrink:0;" />
       <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;font-weight:700;color:#fff;line-height:1.3;">${android ? "Download ZedEvents" : "Install ZedEvents on your home screen"}</div>
+        <div style="font-size:13px;font-weight:700;color:#fff;line-height:1.3;">${android ? "Download Host" : "Install Host on your home screen"}</div>
         <div style="font-size:11px;color:#C9BFAF;margin-top:2px;">${android ? "Add the app to your phone" : "Two taps in Safari — no App Store needed"}</div>
       </div>
       <button type="button" id="pwaInstallBannerBtn" style="background:#C2410C;color:#fff;border:none;border-radius:10px;padding:8px 12px;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;">${android ? "Download" : "Install"}</button>

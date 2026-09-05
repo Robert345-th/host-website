@@ -1,4 +1,4 @@
-const CACHE = "zedevents-shell-v4";
+const CACHE = "host-shell-v5";
 const PRECACHE = [
   "/",
   "/index.html",

@@ -2,7 +2,7 @@
   "name": "zedevents-website",
   "version": "1.0.0",
   "private": true,
-  "description": "ZedEvents customer website",
+  "description": "Host customer website",
   "scripts": {
     "start": "node server.js",
     "dev": "npx --yes serve public -l 5173"

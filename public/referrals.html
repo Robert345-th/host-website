@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Referrals - ZedEvents</title>
+  <title>Referrals - Host</title>
   <meta name="theme-color" content="#C2410C" />
   <script src="/js/prefs.js"></script>
   <link rel="manifest" href="/manifest.json" />
@@ -53,9 +53,9 @@
         document.getElementById("vendors").textContent = data.vendor_referrals || 0;
         document.getElementById("credits").textContent = data.free_featured_credits || 0;
         document.getElementById("shareBtn").onclick = async () => {
-          const text = `Join ZedEvents with my code ${data.referral_code} — ${location.origin}`;
+          const text = `Join Host with my code ${data.referral_code} — ${location.origin}`;
           try {
-            if (navigator.share) await navigator.share({ title: "ZedEvents", text });
+            if (navigator.share) await navigator.share({ title: "Host", text });
             else {
               await navigator.clipboard.writeText(text);
               ZEUI.toast("Code copied.", "success");

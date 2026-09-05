@@ -1,10 +1,10 @@
-# ZedEvents Website
+# Host Website
 
-Customer website for ZedEvents — browse event services, message vendors, and run a shop.
+Customer website for Host — browse event services, message vendors, and run a shop.
 
 API: `https://zedevents-production.up.railway.app`
 
-The site is a PWA. On a phone, tap **Download** in the bottom bar (or **Install** on iPhone) to add ZedEvents to the home screen.
+The site is a PWA. On a phone, tap **Download** in the bottom bar (or **Install** on iPhone) to add Host to the home screen.
 
 ## Run locally
 

@@ -9,7 +9,7 @@
   }
 
   function shareText(item) {
-    const title = item.title || "ZedEvents service";
+    const title = item.title || "Host service";
     const price = typeof ZE !== "undefined" ? ZE.formatPrice(item.price) : item.price;
     return `${title} — ${price}\n${serviceUrl(item)}`;
   }
@@ -33,7 +33,7 @@
     const url = serviceUrl(item);
     if (navigator.share) {
       try {
-        await navigator.share({ title: item.title || "ZedEvents", text, url });
+        await navigator.share({ title: item.title || "Host", text, url });
         return;
       } catch (err) {
         if (err && err.name === "AbortError") return;
@@ -44,16 +44,16 @@
 
   async function shareShop(userId, name) {
     const url = shopUrl(userId);
-    const text = `${name || "ZedEvents shop"}\n${url}`;
+    const text = `${name || "Host shop"}\n${url}`;
     if (navigator.share) {
       try {
-        await navigator.share({ title: name || "ZedEvents", text, url });
+        await navigator.share({ title: name || "Host", text, url });
         return;
       } catch (err) {
         if (err && err.name === "AbortError") return;
       }
     }
-    openShareSheet({ title: name || "ZedEvents shop", _shareText: text, _shareUrl: url });
+    openShareSheet({ title: name || "Host shop", _shareText: text, _shareUrl: url });
   }
 
   function openShareSheet(item) {
