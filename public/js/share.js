@@ -83,12 +83,19 @@
     sheet.querySelector("[data-act=close]").onclick = () => sheet.remove();
   }
 
-  function verifiedStamp(isVerified) {
-    if (!isVerified) return "";
-    const label = typeof t === "function" ? t("verified") : "Verified";
-    return `<span class="verified-stamp" title="${label}">✓ ${label}</span>`;
+  function verifiedMarkSvg() {
+    return `<svg class="verified-mark" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="10" fill="#187A3F"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#fff" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   }
 
-  window.ZEShare = { shareService, shareShop, openShareSheet, copyText, openWhatsApp, serviceUrl, shopUrl };
+  function verifiedStamp(isVerified, opts) {
+    if (!isVerified) return "";
+    const label = typeof t === "function" ? t("verified") : "Verified";
+    const iconOnly = Boolean(opts && opts.iconOnly);
+    const cls = iconOnly ? "verified-stamp verified-stamp--icon" : "verified-stamp";
+    const text = iconOnly ? "" : `<span class="verified-stamp-label">${label}</span>`;
+    return `<span class="${cls}" title="${label}">${verifiedMarkSvg()}${text}</span>`;
+  }
+
+  window.ZEShare = { shareService, shareShop, openShareSheet, copyText, openWhatsApp, serviceUrl, shopUrl, verifiedStamp };
   window.zeVerifiedStamp = verifiedStamp;
 })();

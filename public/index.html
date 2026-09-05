@@ -139,9 +139,13 @@
     .distance { font-size: 10px; color: var(--orange-hot); font-weight: 600; margin-top: 2px; }
     .status { text-align: center; padding: 60px 20px; color: var(--subtext); }
     .verified-stamp {
-      display: inline-block; margin-left: 4px; font-size: 10px; font-weight: 800;
-      color: #1F7A43; background: #E7F5EC; border-radius: 999px; padding: 1px 6px;
+      display: inline-flex; align-items: center; gap: 4px; margin-left: 5px;
+      vertical-align: middle; line-height: 1; color: #146C3A;
+      background: #E8F5EE; border-radius: 999px; padding: 1px 7px 1px 2px;
     }
+    .verified-stamp .verified-mark { width: 14px; height: 14px; display: block; flex-shrink: 0; }
+    .verified-stamp-label { font-size: 10px; font-weight: 700; letter-spacing: 0.02em; }
+    .verified-stamp--icon { background: transparent; padding: 0; margin-left: 4px; }
     .boost-chip {
       position: absolute; top: 8px; left: 8px; background: #F5C518; color: #111;
       font-size: 10px; font-weight: 800; padding: 3px 7px; border-radius: 999px; z-index: 1;
@@ -326,7 +330,7 @@
         const photo = ZE.firstPhoto(item.photos);
         const vendor = item.business_name || item.vendor_name || "Vendor";
         const dist = formatDistance(item.distanceKm);
-        const verified = item.is_verified ? `<span class="verified-stamp">✓ ${typeof t === "function" ? t("verified") : "Verified"}</span>` : "";
+        const verified = typeof zeVerifiedStamp === "function" ? zeVerifiedStamp(item.is_verified) : "";
         const boosted = item.boosted_until && new Date(item.boosted_until) > new Date();
         const img = photo
           ? `<img src="${photo}" alt="" loading="lazy" />`
@@ -447,7 +451,7 @@
         row.innerHTML = rows.map((v, i) => {
           const name = v.business_name || v.name || "Vendor";
           return `<a class="tv-chip" href="/vendor.html?id=${v.id}">
-            <div class="tv-name">${i + 1}. ${escapeHtml(name)}${v.is_verified ? " ✓" : ""}</div>
+            <div class="tv-name">${i + 1}. ${escapeHtml(name)}${typeof zeVerifiedStamp === "function" ? zeVerifiedStamp(v.is_verified, { iconOnly: true }) : ""}</div>
             <div class="tv-meta">★ ${v.average || "—"} · ${v.total || 0}</div>
           </a>`;
         }).join("");

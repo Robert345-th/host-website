@@ -112,9 +112,13 @@
       padding: 13px; font-weight: 800; text-transform: uppercase; font-size: 12px;
     }
     .verified-stamp {
-      display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 800;
-      color: #1F7A43; background: #E7F5EC; border-radius: 999px; padding: 1px 7px;
+      display: inline-flex; align-items: center; gap: 4px; margin-left: 6px;
+      vertical-align: middle; line-height: 1; color: #146C3A;
+      background: #E8F5EE; border-radius: 999px; padding: 2px 8px 2px 3px;
     }
+    .verified-stamp .verified-mark { width: 15px; height: 15px; display: block; flex-shrink: 0; }
+    .verified-stamp-label { font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
+    .verified-stamp--icon { background: transparent; padding: 0; margin-left: 4px; }
   </style>
 </head>
 <body>
@@ -227,7 +231,7 @@
         document.getElementById("category").textContent = itemData.category || "Service";
         document.getElementById("title").textContent = itemData.title || "Untitled";
         document.getElementById("vendor").innerHTML =
-          `${escapeHtml(itemData.business_name || itemData.vendor_name || "Vendor")}${itemData.is_verified ? ' <span class="verified-stamp">✓ Verified</span>' : ""}`;
+          `${escapeHtml(itemData.business_name || itemData.vendor_name || "Vendor")}${typeof zeVerifiedStamp === "function" ? zeVerifiedStamp(itemData.is_verified) : ""}`;
         document.getElementById("price").textContent = ZE.formatPrice(itemData.price);
         document.getElementById("desc").textContent = itemData.description || "No description yet.";
 
