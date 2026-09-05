@@ -196,8 +196,12 @@
     }
     .cta-lab.hidden { display: none; }
     .cta-btn {
-      width: 52px; height: 52px; border-radius: 26px; background: #fff;
-      border: 1px solid #D9D6D0; display: flex; align-items: center; justify-content: center;
+      width: 52px; height: 52px;
+      min-width: 52px; max-width: 52px; min-height: 52px; max-height: 52px;
+      flex: 0 0 52px; aspect-ratio: 1; border-radius: 50%;
+      background: #fff; border: 1px solid #D9D6D0;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
     }
     .cta-lab svg {
       width: 22px; height: 22px; fill: none; stroke: var(--black);
