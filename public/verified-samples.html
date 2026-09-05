@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Pick a Verified mark</title>
+  <meta name="theme-color" content="#C2410C" />
+  <style>
+    :root {
+      --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
+      --text: #211D1A; --subtext: #5C5955; --orange: #C2410C;
+      --cream: #FFF3E8; --gold: #C9A227; --black: #111111;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      padding-bottom: 92px;
+    }
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--orange); padding: 16px;
+    }
+    .header-title { color: var(--cream); font-size: 18px; font-weight: 700; }
+    .header-sub { color: #FFD8B8; font-size: 12px; margin-top: 2px; }
+    .intro {
+      padding: 14px 16px 6px; font-size: 14px; color: var(--subtext); line-height: 1.45;
+    }
+    .option {
+      display: block; width: calc(100% - 24px); margin: 10px 12px;
+      text-align: left; background: var(--card); border: 2px solid var(--border);
+      border-radius: 14px; padding: 12px; cursor: pointer; color: inherit;
+    }
+    .option.picked { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(194,65,12,0.18); }
+    .option-kicker {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 8px;
+    }
+    .option-note { font-size: 12px; color: var(--subtext); margin-top: 10px; line-height: 1.4; }
+    .service-mock {
+      background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 12px;
+    }
+    .cat { font-size: 10px; font-weight: 700; color: var(--orange); letter-spacing: 0.03em; text-transform: uppercase; }
+    .svc-title { font-size: 18px; font-weight: 700; margin: 4px 0 6px; line-height: 1.25; }
+    .price { font-size: 16px; font-weight: 700; color: var(--orange); margin-top: 8px; }
+    .vendor-line { font-size: 13px; color: var(--subtext); display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+    .vendor-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+    .cards {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;
+    }
+    .mini-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #fff; }
+    .mini-photo { height: 72px; }
+    .mini-photo.cake { background: linear-gradient(160deg, #F6D7C5, #C2410C); }
+    .mini-photo.tent { background: linear-gradient(160deg, #D7E8D2, #3F6B4A); }
+    .mini-info { padding: 8px; }
+    .mini-title { font-size: 12px; font-weight: 700; }
+    .mini-price { font-size: 12px; font-weight: 700; color: var(--orange); margin: 2px 0; }
+    .mini-vendor { font-size: 11px; color: var(--subtext); display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+    .check { width: 15px; height: 15px; display: block; flex-shrink: 0; }
+    .check.sm { width: 13px; height: 13px; }
+    .caption { font-size: 11px; font-weight: 700; color: #8A6D00; }
+    .caption.green { color: #146C3A; }
+    .stamp-gold {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--black); color: var(--gold);
+      padding: 3px 8px 3px 5px; font-size: 9px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .shield-row { display: inline-flex; align-items: center; gap: 5px; color: var(--orange); font-size: 11px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+    .pick-bar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+      background: #fff; border-top: 1px solid var(--border);
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .pick-bar strong { font-size: 14px; }
+    .pick-bar span { font-size: 12px; color: var(--subtext); }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="header-title">Verified mark samples</div>
+    <div class="header-sub">Tap one. Then tell me the letter.</div>
+  </div>
+  <p class="intro">Same shop, six layouts. Nothing on the live listing pages changes until you pick.</p>
+
+  <button class="option" type="button" data-pick="A" data-name="A · Check only, blue">
+    <div class="option-kicker">A · Check only, blue</div>
+    <div class="service-mock">
+      <div class="cat">Tents &amp; chairs</div>
+      <div class="svc-title">White party tent, 100 guests</div>
+      <div class="vendor-line">
+        Banda Tents &amp; Chairs
+        <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#1D9BF0"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#fff" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="price">K4,500</div>
+    </div>
+    <div class="cards">
+      <div class="mini-card">
+        <div class="mini-photo cake"></div>
+        <div class="mini-info">
+          <div class="mini-title">Wedding cake</div>
+          <div class="mini-price">K1,800</div>
+          <div class="mini-vendor">Chileshe Cakes <svg class="check sm" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#1D9BF0"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#fff" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-photo tent"></div>
+        <div class="mini-info">
+          <div class="mini-title">Party tent</div>
+          <div class="mini-price">K4,500</div>
+          <div class="mini-vendor">Banda Tents <svg class="check sm" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#1D9BF0"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#fff" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">Like X or Instagram. No pill. No “Verified” word. The blue check is the mark.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="B" data-name="B · Check only, gold">
+    <div class="option-kicker">B · Check only, gold</div>
+    <div class="service-mock">
+      <div class="cat">Tents &amp; chairs</div>
+      <div class="svc-title">White party tent, 100 guests</div>
+      <div class="vendor-line">
+        Banda Tents &amp; Chairs
+        <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#C9A227"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#111" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="price">K4,500</div>
+    </div>
+    <div class="cards">
+      <div class="mini-card">
+        <div class="mini-photo cake"></div>
+        <div class="mini-info">
+          <div class="mini-title">Wedding cake</div>
+          <div class="mini-price">K1,800</div>
+          <div class="mini-vendor">Chileshe Cakes <svg class="check sm" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#C9A227"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#111" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-photo tent"></div>
+        <div class="mini-info">
+          <div class="mini-title">Party tent</div>
+          <div class="mini-price">K4,500</div>
+          <div class="mini-vendor">Banda Tents <svg class="check sm" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#C9A227"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#111" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">Same idea as A, in ZedEvents gold. Reads as a platform mark, not a green sticker.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="C" data-name="C · Check only, orange">
+    <div class="option-kicker">C · Check only, orange</div>
+    <div class="service-mock">
+      <div class="cat">Tents &amp; chairs</div>
+      <div class="svc-title">White party tent, 100 guests</div>
+      <div class="vendor-line">
+        Banda Tents &amp; Chairs
+        <svg class="check" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#C2410C"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#fff" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="price">K4,500</div>
+    </div>
+    <div class="cards">
+      <div class="mini-card">
+        <div class="mini-photo cake"></div>
+        <div class="mini-info">
+          <div class="mini-title">Wedding cake</div>
+          <div class="mini-price">K1,800</div>
+          <div class="mini-vendor">Chileshe Cakes <svg class="check sm" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#C2410C"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#fff" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-photo tent"></div>
+        <div class="mini-info">
+          <div class="mini-title">Party tent</div>
+          <div class="mini-price">K4,500</div>
+          <div class="mini-vendor">Banda Tents <svg class="check sm" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#C2410C"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#fff" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">Matches the ZedEvents rust orange, so it belongs to the app instead of looking pasted on.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="D" data-name="D · Quiet line under the name">
+    <div class="option-kicker">D · Quiet line under the name</div>
+    <div class="service-mock">
+      <div class="cat">Tents &amp; chairs</div>
+      <div class="svc-title">White party tent, 100 guests</div>
+      <div class="vendor-stack">
+        <span>Banda Tents &amp; Chairs</span>
+        <span class="caption">Verified shop</span>
+      </div>
+      <div class="price">K4,500</div>
+    </div>
+    <div class="cards">
+      <div class="mini-card">
+        <div class="mini-photo cake"></div>
+        <div class="mini-info">
+          <div class="mini-title">Wedding cake</div>
+          <div class="mini-price">K1,800</div>
+          <div class="mini-vendor" style="flex-direction:column;align-items:flex-start;gap:2px;">
+            <span>Chileshe Cakes</span>
+            <span class="caption">Verified shop</span>
+          </div>
+        </div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-photo tent"></div>
+        <div class="mini-info">
+          <div class="mini-title">Party tent</div>
+          <div class="mini-price">K4,500</div>
+          <div class="mini-vendor" style="flex-direction:column;align-items:flex-start;gap:2px;">
+            <span>Banda Tents</span>
+            <span class="caption">Verified shop</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">No badge at all. The words sit under the shop name, like a fact, not a sticker.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="E" data-name="E · Black and gold stamp">
+    <div class="option-kicker">E · Black and gold stamp</div>
+    <div class="service-mock">
+      <div class="cat">Tents &amp; chairs</div>
+      <div class="svc-title">White party tent, 100 guests</div>
+      <div class="vendor-line">
+        Banda Tents &amp; Chairs
+        <span class="stamp-gold">
+          <svg class="check sm" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#C9A227"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#111" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Verified
+        </span>
+      </div>
+      <div class="price">K4,500</div>
+    </div>
+    <div class="cards">
+      <div class="mini-card">
+        <div class="mini-photo cake"></div>
+        <div class="mini-info">
+          <div class="mini-title">Wedding cake</div>
+          <div class="mini-price">K1,800</div>
+          <div class="mini-vendor">Chileshe Cakes <span class="stamp-gold"><svg class="check sm" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#C9A227"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#111" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg> Verified</span></div>
+        </div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-photo tent"></div>
+        <div class="mini-info">
+          <div class="mini-title">Party tent</div>
+          <div class="mini-price">K4,500</div>
+          <div class="mini-vendor">Banda Tents <span class="stamp-gold"><svg class="check sm" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#C9A227"/><path d="M5.5 10.25l2.75 2.75 6.25-6.4" fill="none" stroke="#111" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round"/></svg> Verified</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">Keeps the word Verified, but as a ZedEvents stamp: black bar, gold check. Square corners, not a mint pill.</p>
+  </button>
+
+  <button class="option" type="button" data-pick="F" data-name="F · Shield, no pill">
+    <div class="option-kicker">F · Shield, no pill</div>
+    <div class="service-mock">
+      <div class="cat">Tents &amp; chairs</div>
+      <div class="svc-title">White party tent, 100 guests</div>
+      <div class="vendor-line">
+        Banda Tents &amp; Chairs
+        <span class="shield-row">
+          <svg class="check" viewBox="0 0 24 24" aria-hidden="true"><path fill="#C2410C" d="M12 2 4 5.5v6.2c0 5 3.4 9.6 8 10.8 4.6-1.2 8-5.8 8-10.8V5.5L12 2zm-1.1 14.2-3.4-3.4 1.4-1.4 2 2 4.4-4.4 1.4 1.4-5.8 5.8z"/></svg>
+          Verified
+        </span>
+      </div>
+      <div class="price">K4,500</div>
+    </div>
+    <div class="cards">
+      <div class="mini-card">
+        <div class="mini-photo cake"></div>
+        <div class="mini-info">
+          <div class="mini-title">Wedding cake</div>
+          <div class="mini-price">K1,800</div>
+          <div class="mini-vendor">Chileshe Cakes <span class="shield-row"><svg class="check sm" viewBox="0 0 24 24"><path fill="#C2410C" d="M12 2 4 5.5v6.2c0 5 3.4 9.6 8 10.8 4.6-1.2 8-5.8 8-10.8V5.5L12 2zm-1.1 14.2-3.4-3.4 1.4-1.4 2 2 4.4-4.4 1.4 1.4-5.8 5.8z"/></svg> Verified</span></div>
+        </div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-photo tent"></div>
+        <div class="mini-info">
+          <div class="mini-title">Party tent</div>
+          <div class="mini-price">K4,500</div>
+          <div class="mini-vendor">Banda Tents <span class="shield-row"><svg class="check sm" viewBox="0 0 24 24"><path fill="#C2410C" d="M12 2 4 5.5v6.2c0 5 3.4 9.6 8 10.8 4.6-1.2 8-5.8 8-10.8V5.5L12 2zm-1.1 14.2-3.4-3.4 1.4-1.4 2 2 4.4-4.4 1.4 1.4-5.8 5.8z"/></svg> Verified</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="option-note">A shield check plus the word, with no mint background. Closer to an ID mark than a label.</p>
+  </button>
+
+  <div class="pick-bar">
+    <div>
+      <strong id="picked">No pick yet</strong>
+      <div><span>Reply with A, B, C, D, E, or F.</span></div>
+    </div>
+  </div>
+
+  <script>
+    const picked = document.getElementById("picked");
+    document.querySelectorAll(".option").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".option").forEach((el) => el.classList.remove("picked"));
+        btn.classList.add("picked");
+        picked.textContent = "You picked " + btn.dataset.pick;
+      });
+    });
+  </script>
+</body>
+</html>
