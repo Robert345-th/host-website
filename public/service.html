@@ -22,6 +22,7 @@
       --gold: #F5C518; --price-red: #B42318; --thumb-bg: #E9E2D3; --red-btn: #E01B27;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; }
     body {
       font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
       background: var(--bg); color: var(--text);
@@ -70,6 +71,7 @@
       overflow: hidden;
       background: var(--thumb-bg);
       cursor: pointer;
+      touch-action: pan-y;
     }
     .media-main { position: absolute; inset: 0; }
     .media-main img {
@@ -106,8 +108,8 @@
     }
     .boost-chip[hidden] { display: none; }
     .thumb-row {
-      position: absolute; left: 0; right: 0; bottom: 92px; z-index: 8;
-      display: flex; gap: 8px; padding: 0 12px;
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 10px 12px 0; max-width: 640px; margin: 0 auto;
       overflow: hidden; touch-action: pan-y;
     }
     .thumb-row[hidden] { display: none; }
@@ -286,7 +288,8 @@
       font-size: 12px; font-weight: 800; text-transform: uppercase;
       margin: 4px 0 10px;
     }
-    .similar-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; overscroll-behavior-x: contain; }
+    .similar-wrap { max-width: 100%; overflow: hidden; }
+    .similar-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; overscroll-behavior: contain; max-width: 100%; }
     .similar-card { width: 120px; flex-shrink: 0; cursor: pointer; background: none; border: none; padding: 0; text-align: left; color: inherit; }
     .similar-card img { width: 120px; height: 90px; object-fit: cover; border-radius: 10px; display: block; background: var(--border); }
     .similar-card .p { font-size: 12px; font-weight: 800; margin-top: 4px; }
@@ -380,13 +383,13 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
       </button>
       <div class="boost-chip" id="boostChip" hidden data-i18n="boosted">Boosted</div>
-      <div class="thumb-row" id="mediaThumbs" hidden></div>
       <div class="photo-price">
         <div class="price" id="price">—</div>
         <div class="item-title" id="title">—</div>
         <div class="photo-meta" id="photoMeta"></div>
       </div>
     </div>
+    <div class="thumb-row" id="mediaThumbs" hidden></div>
 
     <div class="body-pad">
       <div class="seller-card" id="sellerCard">
@@ -929,9 +932,22 @@
       showViewerPhoto();
     }
 
-    document.querySelector(".hero-wrap").addEventListener("click", (e) => {
+    const hero = document.querySelector(".hero-wrap");
+    let tapX = 0;
+    let tapY = 0;
+    let tapMoved = false;
+    hero.addEventListener("pointerdown", (e) => {
+      tapX = e.clientX;
+      tapY = e.clientY;
+      tapMoved = false;
+    });
+    hero.addEventListener("pointermove", (e) => {
+      if (Math.abs(e.clientX - tapX) > 8 || Math.abs(e.clientY - tapY) > 8) tapMoved = true;
+    });
+    hero.addEventListener("click", (e) => {
       if (viewerOverlay.classList.contains("open")) return;
-      if (e.target.closest(".more-button, .thumb-row, .round-btn, .boost-chip")) return;
+      if (e.target.closest(".more-button, .round-btn, .boost-chip")) return;
+      if (tapMoved) return;
       openViewer(photoIndex);
     });
     document.getElementById("viewerBackBtn").addEventListener("click", (e) => {
