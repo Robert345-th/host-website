@@ -43,6 +43,7 @@
     if (meta) {
       const bar = document.body && document.body.getAttribute("data-bar");
       if (bar === "black") meta.setAttribute("content", "#111111");
+      else if (bar === "white") meta.setAttribute("content", dark ? "#1A1614" : "#ffffff");
       else meta.setAttribute("content", dark ? "#1A1614" : "#C2410C");
     }
   }
