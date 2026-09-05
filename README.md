@@ -2,6 +2,7 @@
 
 Customer website for Host — browse event services, message vendors, and run a shop.
 
+Repo: https://github.com/Robert345-th/host-website  
 API: `https://zedevents-production.up.railway.app`
 
 The site is a PWA. On a phone, tap **Download** in the bottom bar (or **Install** on iPhone) to add Host to the home screen.
@@ -9,7 +10,8 @@ The site is a PWA. On a phone, tap **Download** in the bottom bar (or **Install*
 ## Run locally
 
 ```bash
-cd zedevents-website
+git clone https://github.com/Robert345-th/host-website.git
+cd host-website
 npm install
 npm start
 ```
