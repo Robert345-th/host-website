@@ -19,6 +19,7 @@
       --bg: #121212; --card: #252525; --border: #505050;
       --text: #F5F2ED; --subtext: #C9C0B6; --black: #111111;
     }
+    body.dark .row { transition: background 0.2s, border-color 0.2s; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
@@ -123,15 +124,15 @@
       <div>
         <div class="row-title">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-          <span data-i18n="share_app">Share ZedEvents</span>
+          <span data-i18n="share_app">Share Link</span>
         </div>
-        <div class="row-sub" data-i18n="share_app_sub">Share the app link with friends</div>
+        <div class="row-sub" data-i18n="share_app_sub">Share ZedEvents with friends</div>
       </div>
     </button>
     <div class="row" style="cursor:default;">
       <div style="flex:1;margin-right:10px;">
-        <div class="row-title" data-i18n="dark_mode">Dark mode</div>
-        <div class="row-sub" data-i18n="dark_mode_sub">Dark background, easier at night</div>
+        <div class="row-title" data-i18n="dark_mode">Dark Mode</div>
+        <div class="row-sub" data-i18n="dark_mode_sub">Switch between light and dark theme</div>
       </div>
       <label class="switch">
         <input type="checkbox" id="darkToggle" />
@@ -140,8 +141,8 @@
     </div>
     <div class="row" style="cursor:default;">
       <div style="flex:1;margin-right:10px;">
-        <div class="row-title" data-i18n="low_data">Low-data mode</div>
-        <div class="row-sub" data-i18n="low_data_sub">Smaller photos so the app uses less data</div>
+        <div class="row-title" data-i18n="low_data">Low-Data Mode</div>
+        <div class="row-sub" data-i18n="low_data_sub">Smaller images, lazy loading, and less background data use</div>
       </div>
       <label class="switch">
         <input type="checkbox" id="lowDataToggle" />
@@ -238,7 +239,7 @@
       <div>
         <div class="row-title">
           <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-          <span data-i18n="referrals">Referrals</span>
+          <span data-i18n="referrals">Invite Friends</span>
         </div>
         <div class="row-sub" data-i18n="referrals_sub">Your invite code and boost credits</div>
       </div>
@@ -248,13 +249,13 @@
     <button class="row" type="button" id="pushTestRow">
       <div>
         <div class="row-title" data-i18n="push_test">Send a test notification</div>
-        <div class="row-sub" data-i18n="push_test_sub">Check that alerts show on this phone</div>
+        <div class="row-sub" data-i18n="push_test_sub">Tap to check that alerts show on this phone.</div>
       </div>
     </button>
     <div class="row" style="cursor:default;">
       <div style="flex:1;margin-right:10px;">
-        <div class="row-title" data-i18n="daily_digest">Daily digest</div>
-        <div class="row-sub" data-i18n="daily_digest_sub">Get updates about new services</div>
+        <div class="row-title" data-i18n="daily_digest">Daily Digest</div>
+        <div class="row-sub" data-i18n="daily_digest_sub">Get notified about new services in categories you've favorited</div>
       </div>
       <label class="switch">
         <input type="checkbox" id="digestToggle" checked />
@@ -262,49 +263,52 @@
       </label>
     </div>
 
+    <div class="section-label" data-i18n="section_safety">Safety</div>
+    <button class="row" type="button" onclick="location.href='/report-user.html'">
+      <div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+          <span data-i18n="report_user">Report a User</span>
+        </div>
+      </div>
+    </button>
+
     <div class="section-label" data-i18n="section_support">Support</div>
     <button class="row" type="button" id="supportRow">
       <div>
         <div class="row-title">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
-          <span data-i18n="contact_support">Contact support</span>
+          <span data-i18n="contact_support">Contact Support</span>
         </div>
-        <div class="row-sub" data-i18n="contact_support_sub">Chat with ZedEvents</div>
       </div>
     </button>
     <button class="row" type="button" id="settingsInstallRow">
       <div>
         <div class="row-title">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span data-i18n="download_app">Download app</span>
+          <span data-i18n="download_app">Download App</span>
         </div>
         <div class="row-sub" data-i18n="download_app_sub">Install ZedEvents on your home screen</div>
       </div>
     </button>
 
     <div class="section-label" data-i18n="section_legal">Legal</div>
-    <button class="row" type="button" onclick="location.href='/report-user.html'">
-      <div>
-        <div class="row-title">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-          <span data-i18n="report_user">Report a user</span>
-        </div>
-        <div class="row-sub" data-i18n="report_user_sub">Scam, abuse, or spam</div>
-      </div>
-    </button>
     <button class="row" type="button" onclick="location.href='/privacy-policy.html'">
       <div>
-        <div class="row-title" data-i18n="privacy">Privacy policy</div>
+        <div class="row-title">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span data-i18n="privacy">Privacy Policy</span>
+        </div>
       </div>
     </button>
     <button class="row" type="button" onclick="location.href='/terms.html'">
       <div>
-        <div class="row-title" data-i18n="terms">Terms of use</div>
+        <div class="row-title" data-i18n="terms">Terms of Use</div>
       </div>
     </button>
 
     <div class="section-label" data-i18n="section_account">Account</div>
-    <div class="row" id="profileBox" style="cursor:default;">
+    <div class="row" style="cursor:default;">
       <div>
         <div class="row-title" id="name">Account</div>
         <div class="row-sub" id="phone"></div>
@@ -313,11 +317,11 @@
     <button class="row" type="button" id="deleteRow">
       <div class="row-title danger">
         <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        <span data-i18n="delete_account">Delete my account</span>
+        <span data-i18n="delete_account">Delete My Account</span>
       </div>
     </button>
     <button class="row" type="button" id="logoutRow">
-      <div class="row-title logout-text" data-i18n="logout">Log out</div>
+      <div class="row-title logout-text" data-i18n="logout">Log Out</div>
     </button>
 
     <div class="version-text">ZedEvents</div>
@@ -325,8 +329,8 @@
 
   <div class="modal-overlay" id="logoutModal">
     <div class="modal-box">
-      <div class="modal-title" style="color:var(--red-btn);" data-i18n="logout_confirm">Log out?</div>
-      <div class="modal-warning">You can log back in anytime with your phone number.</div>
+      <div class="modal-title" style="color:var(--red-btn);" data-i18n="logout_confirm">Log Out?</div>
+      <div class="modal-warning">Are you sure you want to log out?</div>
       <div class="modal-actions">
         <button class="modal-cancel-btn" type="button" data-close="logoutModal" data-i18n="cancel">Cancel</button>
         <button class="modal-ok-btn logout" type="button" id="logoutConfirm" data-i18n="logout">Log out</button>
