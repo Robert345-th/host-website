@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Button samples</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+      background: #F4F1EC; color: #211D1A;
+      padding: 16px 16px 96px;
+    }
+    h1 { font-size: 18px; margin-bottom: 6px; }
+    .lead { font-size: 14px; color: #5C5955; line-height: 1.45; margin-bottom: 16px; }
+    .sample {
+      background: #fff; border: 2px solid #E2E0DC; border-radius: 14px;
+      padding: 14px; margin-bottom: 12px; cursor: pointer; text-align: left;
+      width: 100%; color: inherit;
+    }
+    .sample.picked { border-color: #211D1A; }
+    .kicker {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .stack { display: flex; flex-direction: column; gap: 8px; }
+    .primary {
+      width: 100%; border: none; border-radius: 12px;
+      padding: 14px; font-size: 15px; font-weight: 700;
+    }
+    .ghost {
+      width: 100%; border-radius: 8px; padding: 12px;
+      font-size: 14px; font-weight: 600; background: #F3F3F3;
+    }
+    .link {
+      display: block; text-align: center; padding: 10px;
+      font-size: 14px; font-weight: 600; text-decoration: underline;
+    }
+    .pick-bar {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      background: #fff; border-top: 1px solid #E2E0DC;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+    .pick-bar strong { font-size: 14px; }
+    .pick-bar span { font-size: 12px; color: #5C5955; }
+
+    .a .kicker { color: #C2410C; }
+    .a .primary { background: #C2410C; color: #fff; }
+    .a .ghost { border: 1.5px solid #211D1A; color: #211D1A; background: #F3F3F3; }
+    .a .link { color: #211D1A; }
+
+    .b .kicker { color: #1D4ED8; }
+    .b .primary { background: #1D4ED8; color: #fff; }
+    .b .ghost { border: 1.5px solid #1D4ED8; color: #1D4ED8; background: #EEF3FF; }
+    .b .link { color: #1D4ED8; }
+
+    .c .kicker { color: #157A3A; }
+    .c .primary { background: #157A3A; color: #fff; }
+    .c .ghost { border: 1.5px solid #157A3A; color: #157A3A; background: #F1F8F3; }
+    .c .link { color: #157A3A; }
+
+    .d .kicker { color: #111; }
+    .d .primary { background: #111; color: #F5C518; border-radius: 0; text-transform: uppercase; letter-spacing: 0.04em; }
+    .d .ghost { border: 2px solid #111; color: #111; background: #fff; border-radius: 0; text-transform: uppercase; letter-spacing: 0.03em; font-size: 12px; }
+    .d .link { color: #8A6D00; }
+
+    .e .kicker { color: #7C4A1E; }
+    .e .primary { background: #7C4A1E; color: #FFF3E8; }
+    .e .ghost { border: 1.5px solid #7C4A1E; color: #7C4A1E; background: #FFF3E8; }
+    .e .link { color: #7C4A1E; }
+
+    .f .kicker { color: #0F766E; }
+    .f .primary { background: #0F766E; color: #fff; }
+    .f .ghost { border: 1.5px solid #0F766E; color: #0F766E; background: #EEF7F6; }
+    .f .link { color: #0F766E; }
+
+    .g .kicker { color: #6D28D9; }
+    .g .primary { background: #6D28D9; color: #fff; }
+    .g .ghost { border: 1.5px solid #6D28D9; color: #6D28D9; background: #F5F0FF; }
+    .g .link { color: #6D28D9; }
+
+    .h .kicker { color: #211D1A; }
+    .h .primary { background: #1D4ED8; color: #fff; }
+    .h .ghost.book { background: #157A3A; color: #fff; border: none; }
+    .h .ghost.share { background: #0F766E; color: #fff; border: none; }
+    .h .ghost.save { background: #7C4A1E; color: #fff; border: none; }
+    .h .ghost.rate { background: #6D28D9; color: #fff; border: none; }
+    .h .ghost.report { background: #111; color: #F5C518; border: none; }
+    .h .link { color: #C2410C; }
+  </style>
+</head>
+<body>
+  <h1>Button samples</h1>
+  <p class="lead">Same buttons as the service page. Nothing on the live listing is changed. Tap a set, then reply with the letter.</p>
+
+  <button class="sample a" type="button" data-pick="A">
+    <div class="kicker">A · Now · orange</div>
+    <div class="stack">
+      <div class="primary">Message vendor</div>
+      <div class="ghost">Book this</div>
+      <div class="ghost">Share</div>
+      <div class="ghost">Save to favorites</div>
+      <div class="link">View vendor profile</div>
+      <div class="ghost">Rate this vendor</div>
+      <div class="ghost">Report this service</div>
+    </div>
+  </button>
+
+  <button class="sample b" type="button" data-pick="B">
+    <div class="kicker">B · Blue</div>
+    <div class="stack">
+      <div class="primary">Message vendor</div>
+      <div class="ghost">Book this</div>
+      <div class="ghost">Share</div>
+      <div class="ghost">Save to favorites</div>
+      <div class="link">View vendor profile</div>
+      <div class="ghost">Rate this vendor</div>
+      <div class="ghost">Report this service</div>
+    </div>
+  </button>
+
+  <button class="sample c" type="button" data-pick="C">
+    <div class="kicker">C · Green</div>
+    <div class="stack">
+      <div class="primary">Message vendor</div>
+      <div class="ghost">Book this</div>
+      <div class="ghost">Share</div>
+      <div class="ghost">Save to favorites</div>
+      <div class="link">View vendor profile</div>
+      <div class="ghost">Rate this vendor</div>
+      <div class="ghost">Report this service</div>
+    </div>
+  </button>
+
+  <button class="sample d" type="button" data-pick="D">
+    <div class="kicker">D · Black and gold</div>
+    <div class="stack">
+      <div class="primary">Message vendor</div>
+      <div class="ghost">Book this</div>
+      <div class="ghost">Share</div>
+      <div class="ghost">Save to favorites</div>
+      <div class="link">View vendor profile</div>
+      <div class="ghost">Rate this vendor</div>
+      <div class="ghost">Report this service</div>
+    </div>
+  </button>
+
+  <button class="sample e" type="button" data-pick="E">
+    <div class="kicker">E · Brown</div>
+    <div class="stack">
+      <div class="primary">Message vendor</div>
+      <div class="ghost">Book this</div>
+      <div class="ghost">Share</div>
+      <div class="ghost">Save to favorites</div>
+      <div class="link">View vendor profile</div>
+      <div class="ghost">Rate this vendor</div>
+      <div class="ghost">Report this service</div>
+    </div>
+  </button>
+
+  <button class="sample f" type="button" data-pick="F">
+    <div class="kicker">F · Teal</div>
+    <div class="stack">
+      <div class="primary">Message vendor</div>
+      <div class="ghost">Book this</div>
+      <div class="ghost">Share</div>
+      <div class="ghost">Save to favorites</div>
+      <div class="link">View vendor profile</div>
+      <div class="ghost">Rate this vendor</div>
+      <div class="ghost">Report this service</div>
+    </div>
+  </button>
+
+  <button class="sample g" type="button" data-pick="G">
+    <div class="kicker">G · Purple</div>
+    <div class="stack">
+      <div class="primary">Message vendor</div>
+      <div class="ghost">Book this</div>
+      <div class="ghost">Share</div>
+      <div class="ghost">Save to favorites</div>
+      <div class="link">View vendor profile</div>
+      <div class="ghost">Rate this vendor</div>
+      <div class="ghost">Report this service</div>
+    </div>
+  </button>
+
+  <button class="sample h" type="button" data-pick="H">
+    <div class="kicker">H · Each button a different color</div>
+    <div class="stack">
+      <div class="primary">Message vendor</div>
+      <div class="ghost book">Book this</div>
+      <div class="ghost share">Share</div>
+      <div class="ghost save">Save to favorites</div>
+      <div class="link">View vendor profile</div>
+      <div class="ghost rate">Rate this vendor</div>
+      <div class="ghost report">Report this service</div>
+    </div>
+  </button>
+
+  <div class="pick-bar">
+    <strong id="picked">No pick yet</strong>
+    <div><span>Reply with A through H. Live pages are not changed.</span></div>
+  </div>
+  <script>
+    const picked = document.getElementById("picked");
+    document.querySelectorAll(".sample").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".sample").forEach((el) => el.classList.remove("picked"));
+        btn.classList.add("picked");
+        picked.textContent = "You picked " + btn.dataset.pick;
+      });
+    });
+  </script>
+</body>
+</html>
