@@ -212,6 +212,7 @@
 
     .viewer-overlay {
       display: none; position: fixed; inset: 0; background: #000; z-index: 300; overflow: hidden;
+      touch-action: none;
     }
     .viewer-overlay.open { display: block; }
     .round-btn {
@@ -241,7 +242,8 @@
     }
     .viewer-img {
       position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: contain; -webkit-user-drag: none;
+      object-fit: contain; -webkit-user-drag: none; z-index: 1;
+      touch-action: pan-y pinch-zoom;
     }
 
     .modal-overlay {
@@ -595,19 +597,32 @@
     const viewerPrev = document.getElementById("viewerPrevBtn");
     const viewerNext = document.getElementById("viewerNextBtn");
     const viewerCounter = document.getElementById("viewerCounter");
+    let viewerIndex = 0;
+    let swipeX = 0;
+    let swipeY = 0;
 
     function showViewerPhoto() {
-      const url = imgUrl(photoList[photoIndex], "full");
+      const url = imgUrl(photoList[viewerIndex], "full");
       viewerImg.src = url;
       const many = photoList.length > 1;
       viewerPrev.style.display = many ? "flex" : "none";
       viewerNext.style.display = many ? "flex" : "none";
       viewerCounter.style.display = many ? "block" : "none";
-      if (many) viewerCounter.textContent = (photoIndex + 1) + " / " + photoList.length;
+      if (many) viewerCounter.textContent = (viewerIndex + 1) + " / " + photoList.length;
+    }
+
+    function syncHeroToViewer() {
+      photoIndex = viewerIndex;
+      if (!photoList[photoIndex]) return;
+      setMainPhoto(imgUrl(photoList[photoIndex], "hero"));
+      document.querySelectorAll("#mediaThumbs .thumb-box").forEach((el) => {
+        el.classList.toggle("active", Number(el.dataset.i) === photoIndex);
+      });
     }
 
     function openViewer(index) {
       if (!photoList.length) return;
+      viewerIndex = index;
       photoIndex = index;
       showViewerPhoto();
       viewerOverlay.classList.add("open");
@@ -615,30 +630,34 @@
     }
 
     function closeViewer() {
+      syncHeroToViewer();
       viewerOverlay.classList.remove("open");
       document.body.style.overflow = "";
-      if (!photoList[photoIndex]) return;
-      setMainPhoto(imgUrl(photoList[photoIndex], "hero"));
-      document.querySelectorAll(".thumb-box").forEach((el) => {
-        el.classList.toggle("active", Number(el.dataset.i) === photoIndex);
-      });
     }
 
     function stepViewer(dir) {
       if (photoList.length < 2) return;
-      photoIndex = (photoIndex + dir + photoList.length) % photoList.length;
+      viewerIndex = (viewerIndex + dir + photoList.length) % photoList.length;
+      photoIndex = viewerIndex;
       showViewerPhoto();
     }
 
     document.querySelector(".hero-wrap").addEventListener("click", (e) => {
+      if (viewerOverlay.classList.contains("open")) return;
       if (e.target.closest(".more-button, .thumb-row")) return;
       openViewer(photoIndex);
     });
-    document.getElementById("viewerBackBtn").onclick = closeViewer;
-    viewerPrev.onclick = () => stepViewer(-1);
-    viewerNext.onclick = () => stepViewer(1);
-    viewerOverlay.addEventListener("click", (e) => {
-      if (e.target === viewerOverlay) closeViewer();
+    document.getElementById("viewerBackBtn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeViewer();
+    });
+    viewerPrev.addEventListener("click", (e) => {
+      e.stopPropagation();
+      stepViewer(-1);
+    });
+    viewerNext.addEventListener("click", (e) => {
+      e.stopPropagation();
+      stepViewer(1);
     });
     document.addEventListener("keydown", (e) => {
       if (!viewerOverlay.classList.contains("open")) return;
@@ -646,15 +665,34 @@
       if (e.key === "ArrowLeft") stepViewer(-1);
       if (e.key === "ArrowRight") stepViewer(1);
     });
-    let touchStartX = 0;
-    viewerImg.addEventListener("touchstart", (e) => {
-      touchStartX = e.changedTouches[0].screenX;
+    function onSwipeStart(x, y) {
+      swipeX = x;
+      swipeY = y;
+    }
+    function onSwipeEnd(x, y) {
+      const dx = x - swipeX;
+      const dy = y - swipeY;
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+      stepViewer(dx < 0 ? 1 : -1);
+    }
+    viewerOverlay.addEventListener("touchstart", (e) => {
+      if (e.target.closest("button")) return;
+      onSwipeStart(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
     }, { passive: true });
-    viewerImg.addEventListener("touchend", (e) => {
-      const diff = e.changedTouches[0].screenX - touchStartX;
-      if (Math.abs(diff) < 40) return;
-      stepViewer(diff < 0 ? 1 : -1);
+    viewerOverlay.addEventListener("touchend", (e) => {
+      if (e.target.closest("button")) return;
+      onSwipeEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
     }, { passive: true });
+    viewerOverlay.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "touch") return;
+      if (e.target.closest("button")) return;
+      onSwipeStart(e.clientX, e.clientY);
+    });
+    viewerOverlay.addEventListener("pointerup", (e) => {
+      if (e.pointerType === "touch") return;
+      if (e.target.closest("button")) return;
+      onSwipeEnd(e.clientX, e.clientY);
+    });
 
     load();
   </script>
