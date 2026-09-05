@@ -12,7 +12,7 @@
       --bg: #F4F1EC; --card: #FFFFFF; --border: #E2E0DC;
       --text: #211D1A; --subtext: #5C5955; --orange: #C2410C;
       --cream: #FFF3E8; --peach: #FFD8B8; --black: #111111;
-      --gold: #F5C518; --price-red: #B42318;
+      --gold: #F5C518; --price-red: #B42318; --thumb-bg: #E9E2D3;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -23,14 +23,17 @@
     }
     a { color: inherit; text-decoration: none; }
     button { font: inherit; cursor: pointer; }
+
     .topbar {
       position: sticky; top: 0; z-index: 50;
-      background: #fff; padding: 16px;
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      background: #fff;
+      padding: 8px 12px;
+      padding-top: max(8px, env(safe-area-inset-top, 0px));
+      min-height: 52px;
+      display: flex; align-items: center; gap: 8px;
       border-bottom: 1px solid var(--border);
     }
     html.dark .topbar, body.dark .topbar { background: var(--card); }
-    .topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
     .back-button {
       width: 40px; height: 40px; padding: 0; background: none; border: none;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
@@ -39,68 +42,114 @@
       width: 22px; height: 22px; stroke: var(--text); fill: none;
       stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
     }
-    .header-title { color: var(--text); font-size: 18px; font-weight: 700; }
-    .header-sub { color: var(--subtext); font-size: 12px; margin-top: 2px; }
-    .auth-btn {
-      flex-shrink: 0; background: #fff; border: 1.5px solid var(--border);
-      border-radius: 999px; padding: 8px 14px; color: var(--text); font-size: 12px; font-weight: 700;
+    .header-title {
+      flex: 1; min-width: 0;
+      color: var(--text); font-size: 16px; font-weight: 700;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
+    .auth-btn {
+      flex-shrink: 0; background: none; border: none;
+      padding: 8px 4px; color: var(--text); font-size: 14px; font-weight: 700;
+    }
+
     .center-box { padding: 60px 24px; text-align: center; color: var(--subtext); }
-    .content { padding: 12px; max-width: 640px; margin: 0 auto; }
-    .media-wrap { position: relative; margin-bottom: 10px; touch-action: pan-y; }
-    .media-main {
-      width: 100%; aspect-ratio: 4/3; border-radius: 14px; overflow: hidden;
-      background: #FBEAD9;
+
+    .hero-wrap {
+      position: relative;
+      width: 100%;
+      height: min(56dvh, 420px);
+      min-height: 280px;
+      max-height: 420px;
+      overflow: hidden;
+      background: var(--thumb-bg);
+    }
+    .media-main { position: absolute; inset: 0; }
+    .media-main img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      -webkit-user-drag: none; user-select: none; pointer-events: none;
     }
     .more-button {
-      position: absolute; top: 10px; right: 10px; z-index: 10;
+      position: absolute; top: 10px; right: 12px; z-index: 10;
       width: 48px; height: 48px; border-radius: 24px;
       background: var(--black); border: none; padding: 0;
       display: flex; align-items: center; justify-content: center;
     }
     .more-button svg { width: 22px; height: 22px; fill: var(--gold); display: block; }
-    .media-main img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-      -webkit-user-drag: none; user-select: none; pointer-events: none;
-    }
-    .media-thumbs {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      margin-bottom: 12px; max-width: 100%;
+    .thumb-row {
+      position: absolute; left: 0; right: 0; bottom: 92px; z-index: 8;
+      display: flex; gap: 8px; padding: 0 12px;
       overflow: hidden; touch-action: pan-y;
     }
-    .media-thumbs img {
-      width: 64px; height: 64px; border-radius: 10px; object-fit: cover; flex-shrink: 0;
-      border: 2px solid transparent; cursor: pointer;
-      -webkit-user-drag: none; user-select: none;
+    .thumb-row[hidden] { display: none; }
+    .thumb-box {
+      width: 52px; height: 52px; border-radius: 8px; overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.55);
+      padding: 0; background: none; flex-shrink: 0; cursor: pointer;
     }
-    .media-thumbs img.active { border-color: var(--orange); }
+    .thumb-box.active { border-color: var(--gold); }
+    .thumb-box img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      -webkit-user-drag: none; pointer-events: none;
+    }
+    .photo-price {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
+      padding: 40px 16px 14px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.82));
+      pointer-events: none;
+    }
+    .photo-price .price { font-size: 26px; font-weight: 700; color: var(--gold); }
+    .photo-price .item-title { font-size: 15px; font-weight: 600; color: #fff; margin: 4px 0 2px; }
+    .photo-meta { font-size: 11px; color: #ddd; }
     .thumb-ph {
       width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
     }
     .thumb-ph svg {
-      width: 64px; height: 64px; stroke: var(--orange); fill: none; opacity: 0.45;
+      width: 64px; height: 64px; stroke: var(--subtext); fill: none; opacity: 0.5;
       stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
     }
-    .panel {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 14px; padding: 16px;
+
+    .body-pad { padding: 14px 16px 8px; max-width: 640px; margin: 0 auto; }
+    .seller-row {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; background: var(--card); border: 1.5px solid var(--text);
+      border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;
+      text-align: left; color: inherit;
     }
-    .card-cat {
-      font-size: 10px; font-weight: 700; color: var(--orange);
-      text-transform: uppercase; letter-spacing: 0.03em;
+    .seller-avatar {
+      width: 40px; height: 40px; border-radius: 20px; background: var(--black);
+      color: var(--gold); font-size: 15px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; flex-shrink: 0;
     }
-    .title { font-size: 22px; font-weight: 700; margin: 6px 0 4px; line-height: 1.25; }
-    .vendor { font-size: 13px; color: var(--subtext); }
-    .price { font-size: 20px; font-weight: 700; color: var(--orange); margin: 10px 0; }
-    .location {
-      font-size: 13px; color: var(--subtext); margin-bottom: 10px;
-      display: flex; align-items: center; gap: 6px;
+    .seller-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .seller-info { flex: 1; min-width: 0; }
+    .seller-name-line { display: flex; align-items: center; gap: 6px; min-width: 0; }
+    .seller-name {
+      font-size: 14px; font-weight: 800;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .location svg {
-      width: 16px; height: 16px; stroke: var(--orange); fill: none;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+    .seller-sub { font-size: 12px; color: var(--subtext); margin-top: 2px; }
+    .desc-card {
+      background: var(--card); border: 1.5px solid var(--text);
+      border-radius: 12px; padding: 14px;
     }
-    .desc { font-size: 14px; line-height: 1.55; color: var(--text); white-space: pre-wrap; }
+    .desc-label {
+      font-size: 12px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.04em; margin-bottom: 8px;
+    }
+    .desc { font-size: 13px; line-height: 1.5; color: var(--subtext); white-space: pre-wrap; }
+
+    .verified-stamp {
+      display: inline-flex; align-items: center; gap: 4px;
+      border: 1px solid #1B8A4A; color: #1B8A4A; background: transparent;
+      padding: 2px 7px; border-radius: 3px; flex-shrink: 0;
+    }
+    .verified-stamp .verified-mark { width: 10px; height: 10px; display: block; }
+    .verified-stamp-label {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .verified-stamp--icon { background: transparent; padding: 0; border: none; }
+
     .menu-box {
       background: var(--bg); width: 100%; max-width: 480px;
       border-radius: 20px 20px 0 0;
@@ -132,10 +181,11 @@
       color: var(--gold); border: none; font-weight: 800; font-size: 12px;
       text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer;
     }
+
     .fixed-cta-row {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
       display: flex; gap: 10px;
-      padding: 8px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+      padding: 10px 16px calc(14px + env(safe-area-inset-bottom, 0px));
       background: var(--bg); border-top: 1px solid var(--border);
     }
     .fixed-cta-row[hidden] { display: none; }
@@ -146,7 +196,7 @@
     }
     .cta-lab.hidden { display: none; }
     .cta-btn {
-      width: 100%; height: 48px; border-radius: 999px; background: #fff;
+      width: 52px; height: 52px; border-radius: 26px; background: #fff;
       border: 1px solid #D9D6D0; display: flex; align-items: center; justify-content: center;
     }
     .cta-lab svg {
@@ -154,6 +204,7 @@
       stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
     .cta-lab.saved svg { fill: var(--black); }
+
     .modal-overlay {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200;
       align-items: flex-end; justify-content: center;
@@ -161,7 +212,7 @@
     .modal-overlay.open { display: flex; }
     .modal-box {
       background: var(--bg); width: 100%; max-width: 480px;
-      border-radius: 0; border-top: 3px solid var(--black);
+      border-radius: 20px 20px 0 0;
       padding: 20px 20px calc(16px + env(safe-area-inset-bottom, 0px));
     }
     .modal-title { font-size: 16px; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; }
@@ -176,54 +227,52 @@
       padding: 13px; font-weight: 800; text-transform: uppercase; font-size: 12px;
     }
     .modal-ok {
-      flex: 1; background: var(--black); color: #F5C518; border: none; border-radius: 0;
+      flex: 1; background: var(--black); color: var(--gold); border: none; border-radius: 0;
       padding: 13px; font-weight: 800; text-transform: uppercase; font-size: 12px;
     }
-    .verified-stamp {
-      display: inline-flex; align-items: center; gap: 4px; margin-left: 6px;
-      vertical-align: middle; line-height: 1; color: #146C3A;
-      background: #E8F5EE; border-radius: 999px; padding: 2px 8px 2px 3px;
-    }
-    .verified-stamp .verified-mark { width: 15px; height: 15px; display: block; flex-shrink: 0; }
-    .verified-stamp-label { font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
-    .verified-stamp--icon { background: transparent; padding: 0; margin-left: 4px; }
   </style>
 </head>
 <body data-bar="white">
   <div class="topbar">
-    <div class="topbar-left">
-      <button class="back-button" type="button" onclick="history.back()" aria-label="Go back">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
-      <div>
-        <div class="header-title">Service</div>
-        <div class="header-sub">Details</div>
-      </div>
-    </div>
+    <button class="back-button" type="button" onclick="history.back()" aria-label="Go back">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="header-title" id="headerTitle">Service</div>
     <a class="auth-btn" href="/login.html" id="authLink">Login</a>
   </div>
 
   <div id="status" class="center-box">Loading…</div>
-  <div class="content" id="detail" hidden>
-    <div class="media-wrap">
+  <div id="detail" hidden>
+    <div class="hero-wrap">
       <div class="media-main" id="mediaMain">
         <div class="thumb-ph"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="m21 16-5-5-4 4-2-2-5 5"/></svg></div>
       </div>
       <button class="more-button" id="moreBtn" type="button" aria-label="More">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
       </button>
-    </div>
-    <div class="media-thumbs" id="mediaThumbs" hidden></div>
-    <div class="panel">
-      <div class="card-cat" id="category">Service</div>
-      <h1 class="title" id="title">—</h1>
-      <div class="vendor" id="vendor">—</div>
-      <div class="price" id="price">—</div>
-      <div class="location" id="locationRow" hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <span id="location"></span>
+      <div class="thumb-row" id="mediaThumbs" hidden></div>
+      <div class="photo-price">
+        <div class="price" id="price">—</div>
+        <div class="item-title" id="title">—</div>
+        <div class="photo-meta" id="photoMeta"></div>
       </div>
-      <p class="desc" id="desc"></p>
+    </div>
+
+    <div class="body-pad">
+      <button class="seller-row" type="button" id="sellerRow">
+        <div class="seller-avatar" id="sellerAvatar">V</div>
+        <div class="seller-info">
+          <div class="seller-name-line">
+            <span class="seller-name" id="vendor">—</span>
+            <span id="vendorBadge"></span>
+          </div>
+          <div class="seller-sub" id="sellerSub">Shop</div>
+        </div>
+      </button>
+      <div class="desc-card">
+        <div class="desc-label">Details</div>
+        <p class="desc" id="desc"></p>
+      </div>
     </div>
   </div>
 
@@ -311,6 +360,13 @@
       return [];
     }
 
+    function imgUrl(url, preset) {
+      if (!url) return "";
+      return window.ZEPrefs && ZEPrefs.optimizeImageUrl
+        ? ZEPrefs.optimizeImageUrl(url, preset)
+        : url;
+    }
+
     function setMainPhoto(url) {
       document.getElementById("mediaMain").innerHTML = url
         ? `<img src="${url}" alt="" draggable="false" />`
@@ -332,32 +388,44 @@
         status.hidden = true;
         detail.hidden = false;
         document.getElementById("ctaRow").hidden = false;
-        document.getElementById("category").textContent = itemData.category || "Service";
-        document.getElementById("title").textContent = itemData.title || "Untitled";
-        document.getElementById("vendor").innerHTML =
-          `${escapeHtml(itemData.business_name || itemData.vendor_name || "Vendor")}${typeof zeVerifiedStamp === "function" ? zeVerifiedStamp(itemData.is_verified) : ""}`;
+
+        const title = itemData.title || "Untitled";
+        const shopName = itemData.business_name || itemData.vendor_name || "Vendor";
+        document.getElementById("headerTitle").textContent = title;
+        document.title = title + " - ZedEvents";
+        document.getElementById("title").textContent = title;
         document.getElementById("price").textContent = ZE.formatPrice(itemData.price);
+        document.getElementById("photoMeta").textContent = [itemData.category, itemData.location_label]
+          .filter(Boolean).join(" · ");
+        document.getElementById("vendor").textContent = shopName;
+        document.getElementById("vendorBadge").innerHTML =
+          typeof zeVerifiedStamp === "function" ? zeVerifiedStamp(itemData.is_verified) : "";
+        document.getElementById("sellerSub").textContent = itemData.category || "Shop";
         document.getElementById("desc").textContent = itemData.description || "No description yet.";
 
-        if (itemData.location_label) {
-          document.getElementById("locationRow").hidden = false;
-          document.getElementById("location").textContent = itemData.location_label;
+        const avatar = document.getElementById("sellerAvatar");
+        if (itemData.business_photo_url) {
+          avatar.innerHTML = `<img src="${escapeHtml(imgUrl(itemData.business_photo_url, "avatar"))}" alt="" />`;
+        } else {
+          avatar.textContent = shopName.charAt(0).toUpperCase();
         }
 
-        const photos = parsePhotos(itemData.photos);
+        const photos = parsePhotos(itemData.photos).map((url) => imgUrl(url, "hero"));
         if (photos.length) {
           setMainPhoto(photos[0]);
           if (photos.length > 1) {
             const thumbs = document.getElementById("mediaThumbs");
             thumbs.hidden = false;
             thumbs.innerHTML = photos.map((url, i) =>
-              `<img src="${url}" alt="" class="${i === 0 ? "active" : ""}" data-i="${i}" loading="lazy" draggable="false" />`
+              `<button type="button" class="thumb-box${i === 0 ? " active" : ""}" data-i="${i}">
+                <img src="${escapeHtml(imgUrl(parsePhotos(itemData.photos)[i], "thumb"))}" alt="" draggable="false" />
+              </button>`
             ).join("");
-            thumbs.querySelectorAll("img").forEach((img) => {
-              img.onclick = () => {
-                thumbs.querySelectorAll("img").forEach((el) => el.classList.remove("active"));
-                img.classList.add("active");
-                setMainPhoto(img.src);
+            thumbs.querySelectorAll(".thumb-box").forEach((btn) => {
+              btn.onclick = () => {
+                thumbs.querySelectorAll(".thumb-box").forEach((el) => el.classList.remove("active"));
+                btn.classList.add("active");
+                setMainPhoto(photos[Number(btn.dataset.i)]);
               };
             });
           }
@@ -371,12 +439,16 @@
           if (e.target.id === "moreMenu") closeMoreMenu();
         });
 
+        const goVendor = () => {
+          if (!itemData.vendor_id) return;
+          location.href = `/vendor.html?id=${itemData.vendor_id}`;
+        };
+        document.getElementById("sellerRow").onclick = goVendor;
+
         const vendorLink = document.getElementById("vendorLink");
         const rateBtn = document.getElementById("rateBtn");
         if (itemData.vendor_id) {
-          vendorLink.onclick = () => {
-            location.href = `/vendor.html?id=${itemData.vendor_id}`;
-          };
+          vendorLink.onclick = goVendor;
           const rateLabel = document.getElementById("rateBtnLabel");
           if (rateLabel) rateLabel.textContent = typeof t === "function" ? t("rate_vendor") : "Rate this vendor";
           const me = ZEAuth.getUser();
